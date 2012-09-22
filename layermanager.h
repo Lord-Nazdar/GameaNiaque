@@ -1,20 +1,16 @@
 #ifndef LAYERMANAGER_H
 #define LAYERMANAGER_H
 
-#include "layer.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-class LayerManager
+#include "layer.h"
+
+class LayerManager : public sf::Group
 {
 public:
 	LayerManager();
-	void addLayer(Layer *layer);
-	void renderLayer(sf::RenderWindow &window);
-	void renderLayer(sf::RenderWindow &window, int *tablayer); //render with layer choice
-private:
-	Layer *layerList;
-	int size;
+    void drawSingleLayer(sf::RenderTarget& target, int index) const;
 };
 
 #endif // LAYERMANAGER_H

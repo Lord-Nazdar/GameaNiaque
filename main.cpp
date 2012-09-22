@@ -13,11 +13,11 @@ int main()
 	LayerManager layerManager;
 	Layer *layer1;
 	layer1 = new Layer(10);
-	layerManager.addLayer(layer1);
+    layerManager.push_back(layer1);
 
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
-	layer1->addDrawable(&shape);
+    layer1->push_back(&shape);
 
 
 	while (App.isOpen())
@@ -31,7 +31,7 @@ int main()
 				App.close();
 		}
 		App.clear();
-		layerManager.renderLayer(App);
+        App.draw(layerManager);
 		App.display();
 	}
 
