@@ -11,11 +11,14 @@ int main()
 	App.setVerticalSyncEnabled(true);
 	App.setFramerateLimit(30); //Limite a 30FPS
 	LayerManager layerManager;
-	Layer layer1(10);
-	Layer layer2(20);
+	Layer *layer1;
+	layer1 = new Layer(10);
+	layerManager.addLayer(layer1);
 
-	layerManager.addLayer(&layer1);
-	layerManager.addLayer(&layer2);
+	sf::CircleShape shape(100.f);
+	shape.setFillColor(sf::Color::Green);
+	layer1->addDrawable(&shape);
+
 
 	while (App.isOpen())
 	{
@@ -28,6 +31,7 @@ int main()
 				App.close();
 		}
 		App.clear();
+		layerManager.renderLayer(App);
 		App.display();
 	}
 
