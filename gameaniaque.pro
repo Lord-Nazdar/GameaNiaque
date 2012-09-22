@@ -9,3 +9,9 @@ CONFIG += console
 CONFIG -= qt
 
 SOURCES += main.cpp \
+    layermanager.cpp \
+    layer.cpp
+
+HEADERS += \
+    layermanager.h \
+    layer.h
