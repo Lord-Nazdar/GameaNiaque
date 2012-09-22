@@ -1,8 +1,9 @@
-LIBS += C:\QtSDK\mingw\lib\SFML\libsfml-graphics.a
-LIBS += C:\QtSDK\mingw\lib\SFML\libsfml-window.a
-LIBS += C:\QtSDK\mingw\lib\SFML\libsfml-main.a
-LIBS += C:\QtSDK\mingw\lib\SFML\libsfml-system.a
-INCLUDEPATH += C:\QtSDK\mingw\include\SFML
+LIBS += C:\libs\SFML-2.0\lib\libsfml-graphics.a
+LIBS += C:\libs\SFML-2.0\lib\libsfml-window.a
+LIBS += C:\libs\SFML-2.0\lib\libsfml-main.a
+LIBS += C:\libs\SFML-2.0\lib\libsfml-system.a
+
+INCLUDEPATH += C:\libs\SFML-2.0\include
 
 TEMPLATE = app
 CONFIG += console
