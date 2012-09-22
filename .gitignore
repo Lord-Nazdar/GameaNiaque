@@ -1,4 +1,5 @@
-/Makefile.Debug
-/Makefile.Release
 /gameaniaque.pro
-/Makefile
+/gameaniaque.pro.user
+/Makefile*
+/debug/*
+/release/*
