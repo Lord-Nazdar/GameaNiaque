@@ -26,9 +26,10 @@ int main()
 	layerManager.add(&layer5);
 	layerManager.add(&layer6);
 
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-	layer1.push_back(&shape);
+	sf::CircleShape *shape;
+	shape=new sf::CircleShape(100.f);
+	shape->setFillColor(sf::Color::Green);
+	layer1.push_back(shape);
 
 	sf::CircleShape shape2(50.f);
 	shape2.setFillColor(sf::Color::Red);

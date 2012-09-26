@@ -28,6 +28,8 @@ void Layer::setBackgroundColor(sf::Color color){
 }
 
 void Layer::move(float speed, int direction){
-	Group::setPosition(sf::Vector2f((speed*cos(direction*PI/180))*parallaxSpeed,(speed*sin(direction*PI/180))*parallaxSpeed));
-	std::cout << "moving at speed " << speed << "moving direction " << direction << std::endl;
+	/*Group::move(sf::Vector2f((speed*cos(direction*PI/180))*parallaxSpeed,(speed*sin(direction*PI/180))*parallaxSpeed));
+	std::cout << "moving speed " << speed << " moving direction " << direction << " parallax " << parallaxSpeed << std::endl;
+	std::cout << "x:" << (speed*cos(direction*PI/180))*parallaxSpeed << " y:" << (speed*sin(direction*PI/180))*parallaxSpeed << std::endl;*/
+	Group::setPosition(100.f,100.f);
 }
