@@ -10,15 +10,31 @@ int main()
 	sf::RenderWindow App(sf::VideoMode(800, 600), "Game à Niaque");
 	App.setVerticalSyncEnabled(true);
 	App.setFramerateLimit(30); //Limite a 30FPS
+
 	LayerManager layerManager;
-	Layer *layer1;
-	layer1 = new Layer(10);
-    layerManager.push_back(layer1);
+	Layer layer1(0,1);	//Background
+	Layer layer2(10,-1.5);	//Moving Particles background
+	Layer layer3(20,1);	//Ennemy
+	Layer layer4(30,0);	//Player
+	Layer layer5(40,2);	//Moving Foreground1
+	Layer layer6(50,4);	//Moving Foreground2
+
+	layerManager.add(&layer1);
+	layerManager.add(&layer2);
+	layerManager.add(&layer3);
+	layerManager.add(&layer4);
+	layerManager.add(&layer5);
+	layerManager.add(&layer6);
 
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
-    layer1->push_back(&shape);
+	layer1.push_back(&shape);
 
+	sf::CircleShape shape2(50.f);
+	shape2.setFillColor(sf::Color::Red);
+	layer2.push_back(&shape2);
+
+	cout << "v0.5" << endl;
 
 	while (App.isOpen())
 	{
@@ -29,9 +45,11 @@ int main()
 				App.close();
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 				App.close();
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+				layerManager.move(1,5);
 		}
 		App.clear();
-        App.draw(layerManager);
+		layerManager.draw(App);
 		App.display();
 	}
 

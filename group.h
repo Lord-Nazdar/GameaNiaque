@@ -8,28 +8,21 @@ namespace sf
 {
 
     //template <typename T>
-    class Group : public Drawable, public std::vector<Drawable*>
-    {
-
+	class Group : public Drawable, public std::vector<Drawable*>, public Transformable{
         public:
-
             Group() :
                 Drawable(),
                 std::vector<Drawable*>()
-            { }
+			{ }
 
-            ~Group()
-            {
-                for(std::vector<Drawable*>::iterator i = begin(); i != end(); ++i)
-                {
+			~Group(){
+				for(std::vector<Drawable*>::iterator i = begin(); i != end(); ++i){
                     delete *i;
                 }
             }
 
-            virtual void draw(RenderTarget& target, RenderStates states) const
-            {
-                for(std::vector<Drawable*>::const_iterator i = begin(); i != end(); ++i)
-                {
+            virtual void draw(RenderTarget& target, RenderStates states) const{
+                for(std::vector<Drawable*>::const_iterator i = begin(); i != end(); ++i){
                     target.draw(**i, states);
                 }
             }

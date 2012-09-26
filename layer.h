@@ -8,14 +8,16 @@ class Layer : public sf::Group
 {
 public:
 	Layer();
-	Layer(int PZIndex);
+	Layer(int PZIndex, float PParalaxSpeed);
 
 	int getZIndex();
 	void setBackgroundColor(sf::Color color);
     void draw(sf::RenderTarget& window, sf::RenderStates states) const;
+	void move(float speed, int direction);
 
 private:
 	int ZIndex;
+	float parallaxSpeed;
 };
 
 #endif // LAYER_H
