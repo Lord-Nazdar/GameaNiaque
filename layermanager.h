@@ -11,10 +11,10 @@ class LayerManager : public std::vector<Layer>
 {
 public:
 	LayerManager();
-    void drawSingleLayer(sf::RenderTarget& target, int index) const;
+	void drawSingleLayer(sf::RenderWindow &target, int index) const;
 	void move(float speed, int direction);
 	void add(Layer* layer);
-	void draw(sf::RenderTarget& target);
+	void draw(sf::RenderWindow& target);
 private:
 	std::vector<Layer*> layerVector;
 };

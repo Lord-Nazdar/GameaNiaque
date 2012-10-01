@@ -9,27 +9,26 @@ namespace sf
 {
 
     //template <typename T>
-	class Group : public Drawable, public std::vector<Drawable*>, public Transformable{
+	class Group : public sf::Sprite, public std::vector<Sprite*>{
         public:
-            Group() :
-                Drawable(),
-                std::vector<Drawable*>()
-			{ }
+			Group() : Sprite(), std::vector<Sprite*>(){
+			}
 
 			~Group(){
-				for(std::vector<Drawable*>::iterator i = begin(); i != end(); ++i){
+				for(std::vector<Sprite*>::iterator i = begin(); i != end(); ++i){
                     delete *i;
                 }
             }
 
-            virtual void draw(RenderTarget& target, RenderStates states) const{
-                for(std::vector<Drawable*>::const_iterator i = begin(); i != end(); ++i){
+			virtual void draw(RenderTarget& target, sf::RenderStates states) const{
+				for(std::vector<Sprite*>::const_iterator i = begin(); i != end(); ++i){
                     target.draw(**i, states);
                 }
             }
+
     };
 
-    //typedef Group<Drawable> Node;
+	//typedef Group<Sprite> Node;
 
 }
 

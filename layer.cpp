@@ -18,9 +18,11 @@ int Layer::getZIndex(){
 	return ZIndex;
 }
 
-void Layer::draw(sf::RenderTarget &target, sf::RenderStates states) const
+void Layer::draw(sf::RenderWindow &target, sf::RenderStates states) const
 {
-    Group::draw(target, states);
+	for(int i=0;i<spriteVector.size();i++){
+		target.draw(*spriteVector[i]);
+	}
 }
 
 void Layer::setBackgroundColor(sf::Color color){
@@ -28,8 +30,11 @@ void Layer::setBackgroundColor(sf::Color color){
 }
 
 void Layer::move(float speed, int direction){
-	/*Group::move(sf::Vector2f((speed*cos(direction*PI/180))*parallaxSpeed,(speed*sin(direction*PI/180))*parallaxSpeed));
-	std::cout << "moving speed " << speed << " moving direction " << direction << " parallax " << parallaxSpeed << std::endl;
-	std::cout << "x:" << (speed*cos(direction*PI/180))*parallaxSpeed << " y:" << (speed*sin(direction*PI/180))*parallaxSpeed << std::endl;*/
-	Group::setPosition(100.f,100.f);
+	for(int i=0;i<spriteVector.size();i++){
+		spriteVector[i]->move(sf::Vector2f((speed*cos(direction*PI/180))*parallaxSpeed,(speed*sin(direction*PI/180))*parallaxSpeed));
+	}
+}
+
+void Layer::addSprite(sf::Sprite *sprite){
+	spriteVector.push_back(sprite);
 }

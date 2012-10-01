@@ -26,16 +26,22 @@ int main()
 	layerManager.add(&layer5);
 	layerManager.add(&layer6);
 
-	sf::CircleShape *shape;
-	shape=new sf::CircleShape(100.f);
-	shape->setFillColor(sf::Color::Green);
-	layer1.push_back(shape);
+	// Declare and load a texture
+	sf::Texture texture;
+	texture.loadFromFile("texture.png");
 
-	sf::CircleShape shape2(50.f);
-	shape2.setFillColor(sf::Color::Red);
-	layer2.push_back(&shape2);
+	// Create a sprite
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sprite.setScale(sf::Vector2f(0.25,0.25));
+	layer1.addSprite(&sprite);
+	sf::Sprite sprite2;
+	sprite2.setTexture(texture);
+	sprite2.setScale(sf::Vector2f(0.25,0.25));
+	layer2.addSprite(&sprite2);
 
-	cout << "v0.5" << endl;
+
+	cout << "v0.6" << endl;
 
 	while (App.isOpen())
 	{
