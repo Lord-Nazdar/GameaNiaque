@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "layer.h"
 #include "layermanager.h"
+#include "player.h"
 
 using namespace std;
 
@@ -11,8 +12,12 @@ int main()
 	App.setVerticalSyncEnabled(true);
 	App.setFramerateLimit(30); //Limite a 30FPS
 
+	Player player(Player::icosahedral);
+	player.setDirection(0);
+	player.setSpeed(10);
+
 	LayerManager layerManager;
-	Layer layer1(0,1);	//Background
+	Layer layer1(0,0.23);	//Background
 	Layer layer2(10,-1.5);	//Moving Particles background
 	Layer layer3(20,1);	//Ennemy
 	Layer layer4(30,0);	//Player
@@ -40,8 +45,11 @@ int main()
 	sprite2.setScale(sf::Vector2f(0.25,0.25));
 	layer2.addSprite(&sprite2);
 
+	layer4.addSprite(&player.sprite);
 
-	cout << "v0.6" << endl;
+	float anim=0; //Use for speed in ease-out parralax anim
+
+	cout << "v0.6.5" << endl;
 
 	while (App.isOpen())
 	{
@@ -50,11 +58,24 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 				App.close();
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-				App.close();
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-				layerManager.move(1,5);
 		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			App.close();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+			layerManager.move(player.getSpeed(),player.getDirection());
+			anim=1;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			player.decDirection();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			player.incDirection();
+
+		if(anim>0){
+			layerManager.move(player.getSpeed(),player.getDirection(),anim);
+			anim-=0.01;
+		}
+
 		App.clear();
 		layerManager.draw(App);
 		App.display();

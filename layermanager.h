@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <math.h>
 
 #include "layer.h"
 
@@ -13,6 +14,7 @@ public:
 	LayerManager();
 	void drawSingleLayer(sf::RenderWindow &target, int index) const;
 	void move(float speed, int direction);
+	void move(float speed, int direction, float state);
 	void add(Layer* layer);
 	void draw(sf::RenderWindow& target);
 private:
