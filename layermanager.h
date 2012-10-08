@@ -17,6 +17,7 @@ public:
 	void move(float speed, int direction, float state);
 	void add(Layer* layer);
 	void draw(sf::RenderWindow& target);
+	void update(int frame);
 private:
 	std::vector<Layer*> layerVector;
 };

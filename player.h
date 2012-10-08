@@ -1,8 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "SFML/Graphics.hpp"
+#include "movableelement.h"
 
-class Player
+class Player : public MovableElement
 {
 public:
 	enum Style
@@ -20,12 +21,8 @@ public:
 	int getDirection();
 	void incDirection();
 	void decDirection();
-	sf::Texture texture;
-	sf::Sprite sprite;
 
 private:
-	float speed;
-	int direction;
 	Style style;	//Style of the virus (3 values):icosahedral;helical;complex
 
 

@@ -4,52 +4,30 @@
 #include "layermanager.h"
 #include "player.h"
 
+#include "movableelement.h"
+
 using namespace std;
 
 int main()
 {
-	sf::RenderWindow App(sf::VideoMode(800, 600), "Game à Niaque");
-	App.setVerticalSyncEnabled(true);
-	App.setFramerateLimit(30); //Limite a 30FPS
+	int frame=0;	//frame counter
 
-	Player player(Player::icosahedral);
-	player.setDirection(0);
-	player.setSpeed(10);
+	sf::RenderWindow App(sf::VideoMode::getDesktopMode(), "Game à Niaque");
+	App.setVerticalSyncEnabled(true);
+	App.setFramerateLimit(60); //Limite a 30FPS
+
 
 	LayerManager layerManager;
-	Layer layer1(0,0.23);	//Background
-	Layer layer2(10,-1.5);	//Moving Particles background
-	Layer layer3(20,1);	//Ennemy
-	Layer layer4(30,0);	//Player
-	Layer layer5(40,2);	//Moving Foreground1
-	Layer layer6(50,4);	//Moving Foreground2
+	Layer layer1(0,1);
 
 	layerManager.add(&layer1);
-	layerManager.add(&layer2);
-	layerManager.add(&layer3);
-	layerManager.add(&layer4);
-	layerManager.add(&layer5);
-	layerManager.add(&layer6);
 
-	// Declare and load a texture
-	sf::Texture texture;
-	texture.loadFromFile("texture.png");
+	MovableElement *element;
+	element=new MovableElement("icosahedral.png",sf::Vector2f(0,210),0);
+	layer1.addElement(element);
+	layer1.moveTo(frame,sf::Vector2f(400,600),80,0);
 
-	// Create a sprite
-	sf::Sprite sprite;
-	sprite.setTexture(texture);
-	sprite.setScale(sf::Vector2f(0.25,0.25));
-	layer1.addSprite(&sprite);
-	sf::Sprite sprite2;
-	sprite2.setTexture(texture);
-	sprite2.setScale(sf::Vector2f(0.25,0.25));
-	layer2.addSprite(&sprite2);
-
-	layer4.addSprite(&player.sprite);
-
-	float anim=0; //Use for speed in ease-out parralax anim
-
-	cout << "v0.6.5" << endl;
+	cout << "v0.7" << endl;
 
 	while (App.isOpen())
 	{
@@ -62,23 +40,12 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 			App.close();
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-			layerManager.move(player.getSpeed(),player.getDirection());
-			anim=1;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			player.decDirection();
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			player.incDirection();
-
-		if(anim>0){
-			layerManager.move(player.getSpeed(),player.getDirection(),anim);
-			anim-=0.01;
-		}
 
 		App.clear();
+		layerManager.update(frame);
 		layerManager.draw(App);
 		App.display();
+		frame++;
 	}
 
 	return 0;

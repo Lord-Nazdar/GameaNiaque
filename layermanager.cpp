@@ -10,15 +10,15 @@ void LayerManager::drawSingleLayer(sf::RenderWindow& target, int index) const
 }
 
 void LayerManager::move(float speed, int direction){
-	for(unsigned int i=0;i<layerVector.size();i++){
+	/*for(unsigned int i=0;i<layerVector.size();i++){
 		layerVector.at(i)->move(speed,direction);
-	}
+	}*/
 }
 
 void LayerManager::move(float speed, int direction, float state){
-	for(unsigned int i=0;i<layerVector.size();i++){
+	/*for(unsigned int i=0;i<layerVector.size();i++){
 		layerVector.at(i)->move(speed*(1-sin(PI/2+state*PI))/2,direction);
-	}
+	}*/
 }
 
 void LayerManager::draw(sf::RenderWindow& target){
@@ -29,4 +29,10 @@ void LayerManager::draw(sf::RenderWindow& target){
 
 void LayerManager::add(Layer *layer){
 	layerVector.push_back(layer);
+}
+
+void LayerManager::update(int frame){
+	for(unsigned int i=0;i<layerVector.size();i++){
+		layerVector.at(i)->update(frame);
+	}
 }
