@@ -14,7 +14,6 @@ Element::Element(std::string pDir, sf::Vector2f pPos, int pOrientation){
 	assignSprite(pDir);
 	pos=pPos;
 	orientation=pOrientation%360;
-	std::cout << pOrientation%360 << std::endl;
 }
 
 void Element::assignSprite(std::string pDir){
