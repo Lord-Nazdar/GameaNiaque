@@ -18,10 +18,10 @@ int Layer::getZIndex(){
 	return ZIndex;
 }
 
-void Layer::draw(sf::RenderWindow &target, sf::RenderStates states) const
+void Layer::draw(sf::RenderWindow &target, sf::RenderStates states)
 {
-	for(int i=0;i<elementVector.size();i++){
-		elementVector[i]->draw(target);
+    for(std::vector<Element*>::iterator i = elementVector.begin(); i != elementVector.end(); i++){
+		(*i)->draw(target);
 	}
 }
 
@@ -30,15 +30,15 @@ void Layer::setBackgroundColor(sf::Color color){
 }
 
 void Layer::moveTo(int frame, sf::Vector2f pTo, int duration, int id){
-		elementVector[id]->movingTo(frame ,pTo, duration);
+        //elementVector[id]->movingTo(frame ,pTo, duration);
 }
 
-void Layer::addElement(MovableElement *element){
+void Layer::addElement(Element *element){
 	elementVector.push_back(element);
 }
 
 void Layer::update(int frame){
-	for(int i=0;i<elementVector.size();i++){
-		elementVector[i]->update(frame);
+	for(std::vector<Element*>::iterator i = elementVector.begin(); i != elementVector.end(); i++){
+		(*i)->update(frame);
 	}
 }

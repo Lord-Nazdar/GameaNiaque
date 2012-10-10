@@ -2,12 +2,14 @@
 #include <SFML/Graphics.hpp>
 
 #include "gamestep.h"
+#include "textures.h"
 
 using namespace std;
 
 int main()
 {
 	cout << "v0.7.1" << endl;
+
 
 	GameStep gamestep;
 	gamestep.init();

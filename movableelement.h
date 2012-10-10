@@ -1,3 +1,4 @@
+/*
 #ifndef MOVABLEELEMENT_H
 #define MOVABLEELEMENT_H
 
@@ -7,7 +8,7 @@ class MovableElement : public Element
 {
 public:
 	MovableElement();
-	MovableElement(std::string filename, sf::Vector2f pPos, int pOrienation);
+    MovableElement(std::string filename, sf::Vector2f pPos, int pOrientation);
 	void update(int frame);
 	void updateAnim(int frame);
 	void updatePos(int frame);
@@ -21,3 +22,4 @@ protected:
 };
 
 #endif // MOVABLEELEMENT_H
+*/

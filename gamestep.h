@@ -7,7 +7,7 @@
 #include "layermanager.h"
 #include "player.h"
 
-#include "movableelement.h"
+//#include "movableelement.h"
 
 class GameStep
 {

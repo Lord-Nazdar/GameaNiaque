@@ -1,4 +1,5 @@
 #include "gamestep.h"
+#include "textures.h"
 #include <time.h>
 
 GameStep::GameStep()
@@ -22,17 +23,16 @@ int GameStep::menu(){
 void GameStep::pauseMenu(){	//Not very clear :(
 	int activ=0;	//choice number
 
-	sf::Texture texture;
-	sf::Sprite sprite;
-	texture.loadFromFile("resume.png");
-	sprite.setTexture(texture);
-	sprite.setTextureRect(sf::IntRect(500,0,500,200));
-	sf::Texture texture2;
-	sf::Sprite sprite2;
-	texture2.loadFromFile("quit.png");
-	sprite2.setTexture(texture2);
-	sprite2.setPosition(sf::Vector2f(0,250));
-	sprite2.setTextureRect(sf::IntRect(0,0,500,200));
+
+    sf::Sprite resume_button;
+    resume_button.setTexture(Texture("resume.png"));
+    resume_button.setTextureRect(sf::IntRect(500,0,500,200));
+
+    sf::Sprite quit_button;
+    quit_button.setTexture(Texture("quit.png"));
+    quit_button.setPosition(sf::Vector2f(0,250));
+    quit_button.setTextureRect(sf::IntRect(0,0,500,200));
+
 	while (window->isOpen())
 	{
 		sf::Event event;
@@ -53,18 +53,18 @@ void GameStep::pauseMenu(){	//Not very clear :(
 		}
 
 		if(activ%2==0){
-			sprite.setTextureRect(sf::IntRect(500,0,500,200));
-			sprite2.setTextureRect(sf::IntRect(0,0,500,200));
+            resume_button.setTextureRect(sf::IntRect(500,0,500,200));
+            quit_button.setTextureRect(sf::IntRect(0,0,500,200));
 
 		}
 		else{
-			sprite.setTextureRect(sf::IntRect(0,0,500,200));
-			sprite2.setTextureRect(sf::IntRect(500,0,500,200));
+            resume_button.setTextureRect(sf::IntRect(0,0,500,200));
+            quit_button.setTextureRect(sf::IntRect(500,0,500,200));
 		}
 
 		window->clear();
-		window->draw(sprite);
-		window->draw(sprite2);
+        window->draw(resume_button);
+        window->draw(quit_button);
 		window->display();
 	}
 }
@@ -86,9 +86,9 @@ bool GameStep::step3(){
 	std::cout << height << std::endl;
 	std::cout << width << std::endl;
 
-	std::vector<MovableElement*> element;
+    std::vector<Element*> element;
 	for(int i=0; i<rand()%5+4;i++){
-		element.push_back(new MovableElement("icosahedral.png",sf::Vector2f(rand() % width,rand() % height),0));
+        element.push_back(new Element(Texture("icosahedral.png"), sf::Vector2f(rand() % width,rand() % height), 0.f));
 		layer1.addElement(element[i]);
 		std::cout << "et de " << i+1 << std::endl;
 	}

@@ -1,4 +1,4 @@
-#include "element.h"
+/*#include "element.h"
 #include <iostream>
 
 Element::Element()
@@ -6,7 +6,7 @@ Element::Element()
 
 }
 
-Element::Element(sf::Texture& pTex, sf::Vector2f pPos = sf::Vector2f(0, 0), float pDir = 0.f)
+Element::Element(sf::Texture pTex = sf::Texture(), sf::Vector2f pPos = sf::Vector2f(0, 0), float pDir = 0.f)
 {
     sprite.setTexture(pTex);
     setPosition(pPos);
@@ -19,8 +19,4 @@ void Element::draw(sf::RenderWindow &window)
     sprite.setRotation(getRotation());
 	window.draw(sprite);
 }
-
-void Element::update(int frame)
-{
-
-}
+*/

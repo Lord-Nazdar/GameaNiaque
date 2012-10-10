@@ -1,9 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "SFML/Graphics.hpp"
-#include "movableelement.h"
+#include "element.h"
 
-class Player : public MovableElement
+class Player : public Element
 {
 public:
 	enum Style
@@ -15,15 +15,14 @@ public:
 
 	Player();
 	Player(Style type);
-	void setSpeed(float value);
-	float getSpeed();
-	void setDirection(int value);
-	int getDirection();
-	void incDirection();
-	void decDirection();
+
+    void accelerate(); // Accélère dans la direction pointée
+    void turnRight(); // Sens horaire
+    void turnLeft(); // Sens anti-horaire
 
 private:
 	Style style;	//Style of the virus (3 values):icosahedral;helical;complex
+    sf::Vector2f velocity;
 
 
 };

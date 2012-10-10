@@ -8,7 +8,7 @@
 
 #include "layer.h"
 
-class LayerManager : public std::vector<Layer>
+class LayerManager
 {
 public:
 	LayerManager();

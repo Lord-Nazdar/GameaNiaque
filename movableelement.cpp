@@ -1,3 +1,4 @@
+/*
 #include "movableelement.h"
 
 float easeInOutQuad(float t, float b, float c, int d){
@@ -41,3 +42,4 @@ void MovableElement::movingTo(int frame, sf::Vector2f pTo, int pDuration){
 	movingToDuration=pDuration;
 	movingToStartTime=frame;
 }
+*/

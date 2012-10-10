@@ -3,7 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "movableelement.h"
+#include "element.h"
+//#include "movableelement.h"
 
 class Layer
 {
@@ -13,15 +14,15 @@ public:
 
 	int getZIndex();
 	void setBackgroundColor(sf::Color color);
-	void draw(sf::RenderWindow &window, sf::RenderStates states) const;
+    void draw(sf::RenderWindow &window, sf::RenderStates states);
 	void moveTo(int frame, sf::Vector2f pTo, int duration, int id);
-	void addElement(MovableElement *element);
+    void addElement(Element *element);
 	void update(int frame);
 
 private:
 	int ZIndex;
 	float parallaxSpeed;
-	std::vector<MovableElement*> elementVector;
+    std::vector<Element*> elementVector;
 };
 
 #endif // LAYER_H

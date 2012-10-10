@@ -4,21 +4,17 @@
 #include "SFML/Graphics.hpp"
 #include <string>
 
-class Element
+class Element : public sf::Transformable
 {
 public:
 	Element();
-	Element(std::string pDir);
-	Element(std::string pDir, sf::Vector2f pPos, int pOrietation);
-	void assignSprite(std::string pDir);
-	void setPos(sf::Vector2f pPos);
-	void setRotation(int pOrientation);
-	void draw(sf::RenderWindow &window);
-	void update(int frame);
+    Element(sf::Texture& pTex, sf::Vector2f pPos, float pOrientation);
+
+
+    virtual void draw(sf::RenderWindow &window);
+    virtual void update(int frame);
+
 protected:
-	sf::Vector2f pos;
-	int orientation;
-	sf::Texture texture;
 	sf::Sprite sprite;
 };
 
