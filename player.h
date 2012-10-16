@@ -1,9 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "SFML/Graphics.hpp"
-#include "element.h"
+#include "animatedelement.h"
 
-class Player : public Element
+class Player : public AnimatedElement
 {
 public:
 	enum Style

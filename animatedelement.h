@@ -1,23 +1,27 @@
-/*
 #ifndef ANIMATEDELEMENT_H
 #define ANIMATEDELEMENT_H
 
 #include "SFML/Graphics.hpp"
 #include <string>
+#include "element.h"
 
 class AnimatedElement : public Element
 {
 public:
-	Element();
-    Element(sf::Texture pTex, sf::Vector2f pPos, float pOrientation);
+	AnimatedElement();
+	AnimatedElement(sf::Texture& pTex, sf::Vector2f pPos, float pOrientation, int frameSize, int maxFrames);
 
 
-    virtual void draw(sf::RenderWindow &window);
-    virtual void update(int frame);
+	virtual void draw(sf::RenderWindow &window);
+	virtual void update(int frame);
+	void setFrame(int frame);
 
 protected:
-	sf::Sprite sprite;
+	int frameSize;
+	int maxFrames;
+	int frameIndex;
+
 };
 
 #endif // ANIMATEDELEMENT_H
-*/
+

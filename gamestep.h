@@ -20,11 +20,14 @@ public:
 	bool step2();
 	bool step3();
 	bool step4();
+	void stepEvent();
+	int step3Mouse(std::vector<Element*> element);
 private:
 	sf::RenderWindow *window;
 	int frame;
 	int height;
 	int width;
+	bool mouseButtonDown;
 };
 
 #endif // GAMESTEP_H

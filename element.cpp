@@ -13,14 +13,24 @@ Element::Element(sf::Texture& pTex, sf::Vector2f pPos = sf::Vector2f(0, 0), floa
     setRotation(pDir);
 }
 
+Element::Element(sf::Sprite &pSprite){
+	sprite=pSprite;
+}
+
 void Element::draw(sf::RenderWindow &window)
 {
     sprite.setPosition(getPosition());
     sprite.setRotation(getRotation());
+	sprite.setOrigin(getOrigin());
+	sprite.setScale(getScale());
 	window.draw(sprite);
 }
 
 void Element::update(int frame)
 {
 
+}
+
+void Element::setColor(sf::Color color){
+	sprite.setColor(color);
 }
