@@ -128,7 +128,7 @@ bool GameStep::step3(){
 		tabRand[randValue]=0;
 
 		sf::Vector2f pos((((value-1)%nbWidth)*200)+gapW,((floor((value-1)/nbWidth))*200)+gapH);
-		element.push_back(new AnimatedElement(Texture("animation.png"), pos, 0.f, 64, 20));
+		element.push_back(new AnimatedElement(Texture("icosahedral2.png"), pos, 0.f, 64, 1));
 		layer1.addElement(element[i]);
 	}
 
