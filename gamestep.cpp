@@ -19,6 +19,7 @@ void GameStep::init(){
 }
 
 int GameStep::menu(){
+
 	return 1;
 }
 
@@ -72,7 +73,101 @@ void GameStep::pauseMenu(){	//Not very clear :(
 }
 
 bool GameStep::step1(){
+	srand(time(NULL));
+	/*----
+	  Note gameplay :
+	  mouvement verouiller écran gauche droite verouiller middle et bas : haut bas
+	------*/
+	LayerManager layerManager;
+	Layer layer1(1,0);	//Cell layer
+	Layer layer2(1,0);	//Laser layer
+	Layer layer3(1,1);	//Enemies layer
+	layerManager.add(&layer2);
+	layerManager.add(&layer3);
+	layerManager.add(&layer1);
+	unsigned int frame=0;
+	int red=120;
+	bool incColor=false;
+	bool fireactiv=false; //trigger when fire press
 
+	//chargement du sprite
+	sf::Vector2f pos((width/2)-32,(height/4)*3);
+
+	AnimatedElement *player;
+	player=new AnimatedElement(Texture("grid.png"), pos, 0.f, 64, 1);
+
+	layer1.addElement(player);
+
+	//Vector de laser et de enemies
+	std::vector<AnimatedElement*> laser;
+	std::vector<AnimatedElement*> enemies;
+
+	while (window->isOpen())
+	{
+		stepEvent();
+
+		if(frame%4==0){
+			if(!incColor){
+				red--;
+				if(red<90)incColor=true;
+			}
+			else{
+				red++;
+				if(red>120)incColor=false;
+			}
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+			if(player->getPosition().y>height/2)
+				player->move(sf::Vector2f(0,-8));}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+			if(player->getPosition().y<height-96)
+				player->move(sf::Vector2f(0,8));}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+			if(player->getPosition().x>32)
+				player->move(sf::Vector2f(-8,0));}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+			if(player->getPosition().x<width-96)
+				player->move(sf::Vector2f(8,0));}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)&&!fireactiv){
+			laser.push_back(new AnimatedElement(Texture("laser.png"),player->getPosition(), 0.f, 64, 1));
+			layer2.addElement(laser[laser.size()-1]);
+			fireactiv=true;
+		}
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			fireactiv=false;
+
+		//Update laser
+		for(std::vector<AnimatedElement*>::iterator i = laser.begin(); i != laser.end(); i++){
+			(*i)->move(0,-11);
+			//Destruction en cas de hors champ
+			//if((*i)->getPosition().y<-128)
+					//laser.erase(i);
+
+			//Collision check !
+		}
+
+		//spawn enemies
+		if(frame%60==0){
+			int r = 0 + (rand() % (width - 0));
+			enemies.push_back(new AnimatedElement(Texture("grid.png"),sf::Vector2f(r,0), 0.f, 64, 1));
+			layer3.addElement(enemies[enemies.size()-1]);
+		}
+
+		//Update enemies
+		for(std::vector<AnimatedElement*>::iterator i = enemies.begin(); i != enemies.end(); i++){
+			(*i)->move(0,4);
+		}
+
+
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->display();
+
+		frame++;
+	}
 }
 
 bool GameStep::step2(){

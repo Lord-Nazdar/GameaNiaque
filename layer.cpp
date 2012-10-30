@@ -37,6 +37,10 @@ void Layer::addElement(Element *element){
 	elementVector.push_back(element);
 }
 
+void Layer::removeElement(Element *element){
+	//elementVector.erase(element);
+}
+
 void Layer::update(int frame){
 	for(std::vector<Element*>::iterator i = elementVector.begin(); i != elementVector.end(); i++){
 		(*i)->update(frame);

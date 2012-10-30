@@ -17,6 +17,7 @@ public:
     void draw(sf::RenderWindow &window, sf::RenderStates states);
 	void moveTo(int frame, sf::Vector2f pTo, int duration, int id);
     void addElement(Element *element);
+	void removeElement(Element *element);
 	void update(int frame);
 
 private:
