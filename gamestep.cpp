@@ -10,7 +10,7 @@ GameStep::GameStep()
 }
 
 void GameStep::init(){
-	window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "Game à Niaque", sf::Style::Fullscreen);
+	window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "Game à Niaque", );
 	window->setVerticalSyncEnabled(true);
 	window->setFramerateLimit(60); //Limite a 60FPS
 	height=sf::VideoMode::getDesktopMode().height;
@@ -100,11 +100,13 @@ bool GameStep::step1(){
 
 	//Vector de laser et de enemies
 	std::vector<AnimatedElement*> laser;
+	//laser.reserve(10);
 	std::vector<AnimatedElement*> enemies;
+	//enemies.reserve(10);
 
 	while (window->isOpen())
 	{
-		stepEvent();
+		//stepEvent();
 
 		if(frame%4==0){
 			if(!incColor){
@@ -131,7 +133,7 @@ bool GameStep::step1(){
 				player->move(sf::Vector2f(8,0));}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)&&!fireactiv){
-			laser.push_back(new AnimatedElement(Texture("laser.png"),player->getPosition(), 0.f, 64, 1));
+			laser.push_back(new AnimatedElement(Texture("laser.png"),player->getPosition(), 0.f, 64, 2));
 			layer2.addElement(laser[laser.size()-1]);
 			fireactiv=true;
 		}
@@ -139,13 +141,37 @@ bool GameStep::step1(){
 			fireactiv=false;
 
 		//Update laser
-		for(std::vector<AnimatedElement*>::iterator i = laser.begin(); i != laser.end(); i++){
-			(*i)->move(0,-11);
-			//Destruction en cas de hors champ
-			//if((*i)->getPosition().y<-128)
-					//laser.erase(i);
+		unsigned int lsize = laser.size();
+		unsigned int lenemies = enemies.size();
+		std::cout << "1: " << lsize << "; 2: " << lenemies << std::endl;
+		for(unsigned int i=0; i<lsize; i++){
+			//if((*i)->frameSize!=NULL){
+				laser.at(i)->move(0,-11);
+				//Destruction en cas de hors champ
+				//if((*i)->getPosition().y<-128)
+						//laser.erase(i);
 
-			//Collision check !
+				//Collision check !
+				for(unsigned int j=0; j<lenemies; j++){
+					//if((*j)->frameSize!=NULL){
+						//std::cout << "laser : " << (*i)->getPosition().x << ";" << (*i)->getPosition().y << std::endl;
+						//std::cout << "enemies : " << (*j)->getPosition().x << ";" << (*j)->getPosition().y << std::endl;
+						if(laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
+							if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
+
+								laser.erase(laser.begin()+i);
+								lsize--;
+								//laser.reserve(10);
+								enemies.erase(enemies.begin()+j);
+								lenemies--;
+								std::cout << "1: " << i << "; 2: " << j << std::endl;
+								//enemies.reserve(10);
+								std::cout << "touch " << std::endl;
+							}
+						}
+					//}
+				}
+			//}
 		}
 
 		//spawn enemies
