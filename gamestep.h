@@ -28,6 +28,7 @@ private:
 	int height;
 	int width;
 	bool mouseButtonDown;
+	unsigned int score;
 };
 
 #endif // GAMESTEP_H

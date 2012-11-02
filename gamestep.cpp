@@ -10,12 +10,14 @@ GameStep::GameStep()
 }
 
 void GameStep::init(){
-	window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "Game à Niaque", );
+	window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "Game à Niaque");
 	window->setVerticalSyncEnabled(true);
 	window->setFramerateLimit(60); //Limite a 60FPS
 	height=sf::VideoMode::getDesktopMode().height;
 	width=sf::VideoMode::getDesktopMode().width;
 	srand ( time(NULL) );
+
+	this->score=0;
 }
 
 int GameStep::menu(){
@@ -80,6 +82,8 @@ bool GameStep::step1(){
 	------*/
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Cell layer
+
+	//--------Warning:do not add anything other on them---------
 	Layer layer2(1,0);	//Laser layer
 	Layer layer3(1,1);	//Enemies layer
 	layerManager.add(&layer2);
@@ -106,7 +110,7 @@ bool GameStep::step1(){
 
 	while (window->isOpen())
 	{
-		//stepEvent();
+		stepEvent();
 
 		if(frame%4==0){
 			if(!incColor){
@@ -140,38 +144,53 @@ bool GameStep::step1(){
 		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			fireactiv=false;
 
-		//Update laser
+
+		//Size of vector
 		unsigned int lsize = laser.size();
 		unsigned int lenemies = enemies.size();
-		std::cout << "1: " << lsize << "; 2: " << lenemies << std::endl;
+
+		//Update laser
 		for(unsigned int i=0; i<lsize; i++){
-			//if((*i)->frameSize!=NULL){
-				laser.at(i)->move(0,-11);
-				//Destruction en cas de hors champ
-				//if((*i)->getPosition().y<-128)
-						//laser.erase(i);
+			laser.at(i)->move(0,-11);
 
-				//Collision check !
-				for(unsigned int j=0; j<lenemies; j++){
-					//if((*j)->frameSize!=NULL){
-						//std::cout << "laser : " << (*i)->getPosition().x << ";" << (*i)->getPosition().y << std::endl;
-						//std::cout << "enemies : " << (*j)->getPosition().x << ";" << (*j)->getPosition().y << std::endl;
-						if(laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
-							if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
+			//Collision check!
+			for(unsigned int j=0; j<lenemies; j++){
+				if(lsize>0 && lenemies>0 &&laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
+					if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
+						//Delete the laser
+						laser.erase(laser.begin()+i);
+						layer2.erase(i);
+						lsize--;
 
-								laser.erase(laser.begin()+i);
-								lsize--;
-								//laser.reserve(10);
-								enemies.erase(enemies.begin()+j);
-								lenemies--;
-								std::cout << "1: " << i << "; 2: " << j << std::endl;
-								//enemies.reserve(10);
-								std::cout << "touch " << std::endl;
-							}
-						}
-					//}
+						//Delete the enemie
+						enemies.erase(enemies.begin()+j);
+						layer3.erase(j);
+						lenemies--;
+
+						//inc score
+						this->score+=10;
+
+						//Debug
+						std::cout << "lsize : " << lsize << " ; i : " << i << std::endl;
+						std::cout << "lenemies : " << lenemies << " ; j : " << j << std::endl;
+					}
 				}
-			//}
+
+				//Delete enemie if too low
+
+				else if(enemies.at(j)->getPosition().y>height+128){
+					enemies.erase(enemies.begin()+j);
+					layer3.erase(j);
+					lenemies--;
+				}
+			}
+
+			//Delete laser if too high
+			if(lsize>0 && laser.at(i)->getPosition().y<-128){
+				laser.erase(laser.begin()+i);
+				layer2.erase(i);
+				lsize--;
+			}
 		}
 
 		//spawn enemies
@@ -305,8 +324,8 @@ void GameStep::stepEvent(){
 	{
 		if (event.type == sf::Event::Closed)
 			window->close();
-		if (event.type == sf::Event::LostFocus)
-			pauseMenu();
+		/*if (event.type == sf::Event::LostFocus)
+			pauseMenu();*/
 		if (event.type == sf::Event::MouseButtonPressed){
 			if (event.mouseButton.button == sf::Mouse::Left)
 				mouseButtonDown=true;

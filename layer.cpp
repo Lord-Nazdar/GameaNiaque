@@ -37,6 +37,10 @@ void Layer::addElement(Element *element){
 	elementVector.push_back(element);
 }
 
+void Layer::erase(unsigned int pos){
+	elementVector.erase(elementVector.begin()+pos);
+}
+
 void Layer::removeElement(Element *element){
 	//elementVector.erase(element);
 }
