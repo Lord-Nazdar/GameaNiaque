@@ -155,7 +155,7 @@ bool GameStep::step1(){
 
 			//Collision check!
 			for(unsigned int j=0; j<lenemies; j++){
-				if(lsize>0 && lenemies>0 &&laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
+				if(lsize>0 && lenemies>0 && laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
 					if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
 						//Delete the laser
 						laser.erase(laser.begin()+i);
@@ -178,7 +178,7 @@ bool GameStep::step1(){
 
 				//Delete enemie if too low
 
-				else if(enemies.at(j)->getPosition().y>height+128){
+				else if(lenemies>0 && enemies.at(j)->getPosition().y>height+128){
 					enemies.erase(enemies.begin()+j);
 					layer3.erase(j);
 					lenemies--;
