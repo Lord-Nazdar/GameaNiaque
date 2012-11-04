@@ -2,6 +2,13 @@
 #include "textures.h"
 #include <time.h>
 #include "math.h"
+#include <sstream>
+
+std::string intTostring(int nb){
+	std::ostringstream oss;
+	oss << nb;
+	return oss.str();
+}
 
 GameStep::GameStep()
 {
@@ -10,9 +17,9 @@ GameStep::GameStep()
 }
 
 void GameStep::init(){
-	window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "Game à Niaque");
+	window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "Game à Niaque", sf::Style::Fullscreen);
 	window->setVerticalSyncEnabled(true);
-	window->setFramerateLimit(60); //Limite a 60FPS
+	window->setFramerateLimit(100); //Limite a 60FPS
 	height=sf::VideoMode::getDesktopMode().height;
 	width=sf::VideoMode::getDesktopMode().width;
 	srand ( time(NULL) );
@@ -86,13 +93,22 @@ bool GameStep::step1(){
 	//--------Warning:do not add anything other on them---------
 	Layer layer2(1,0);	//Laser layer
 	Layer layer3(1,1);	//Enemies layer
+	Layer layer4(1,0);	//Explosion layer
+	Layer layer5(1,1);	//Bonus Layer
 	layerManager.add(&layer2);
 	layerManager.add(&layer3);
+	layerManager.add(&layer4);
+	layerManager.add(&layer5);
 	layerManager.add(&layer1);
 	unsigned int frame=0;
 	int red=120;
 	bool incColor=false;
 	bool fireactiv=false; //trigger when fire press
+
+	//Score display
+	sf::Font Arial;
+	Arial.loadFromFile("arial.ttf");
+	sf::Text scoreText;
 
 	//chargement du sprite
 	sf::Vector2f pos((width/2)-32,(height/4)*3);
@@ -104,9 +120,11 @@ bool GameStep::step1(){
 
 	//Vector de laser et de enemies
 	std::vector<AnimatedElement*> laser;
-	//laser.reserve(10);
 	std::vector<AnimatedElement*> enemies;
-	//enemies.reserve(10);
+	std::vector<AnimatedElement*> bonus;
+
+	//Vector for lifetime
+	std::vector<int> exploLifeTime;
 
 	while (window->isOpen())
 	{
@@ -125,25 +143,28 @@ bool GameStep::step1(){
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
 			if(player->getPosition().y>height/2)
-				player->move(sf::Vector2f(0,-8));}
+				player->move(sf::Vector2f(0,-9));}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
 			if(player->getPosition().y<height-96)
-				player->move(sf::Vector2f(0,8));}
+				player->move(sf::Vector2f(0,10));}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 			if(player->getPosition().x>32)
-				player->move(sf::Vector2f(-8,0));}
+				player->move(sf::Vector2f(-9,0));}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 			if(player->getPosition().x<width-96)
-				player->move(sf::Vector2f(8,0));}
+				player->move(sf::Vector2f(10,0));}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)&&!fireactiv){
 			laser.push_back(new AnimatedElement(Texture("laser.png"),player->getPosition(), 0.f, 64, 2));
 			layer2.addElement(laser[laser.size()-1]);
 			fireactiv=true;
+			score--;
 		}
 		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			fireactiv=false;
 
+
+		using namespace std;
 
 		//Size of vector
 		unsigned int lsize = laser.size();
@@ -155,8 +176,13 @@ bool GameStep::step1(){
 
 			//Collision check!
 			for(unsigned int j=0; j<lenemies; j++){
-				if(lsize>0 && lenemies>0 && laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
-					if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
+
+				if(lsize>0 && lenemies>0 && laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y-64 && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
+					if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x-64 && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
+						//Generate explosion effect
+						layer4.addElement(new AnimatedElement(Texture("explo.png"),enemies.at(j)->getPosition(), 0.f, 64, 5));
+						exploLifeTime.push_back(5);
+
 						//Delete the laser
 						laser.erase(laser.begin()+i);
 						layer2.erase(i);
@@ -170,19 +196,24 @@ bool GameStep::step1(){
 						//inc score
 						this->score+=10;
 
-						//Debug
-						std::cout << "lsize : " << lsize << " ; i : " << i << std::endl;
-						std::cout << "lenemies : " << lenemies << " ; j : " << j << std::endl;
 					}
+
+					//An cas de double suppression
+					if(lenemies-1<j)
+						j--;
+					if(lsize-1<i)
+						i--;
 				}
 
 				//Delete enemie if too low
-
 				else if(lenemies>0 && enemies.at(j)->getPosition().y>height+128){
 					enemies.erase(enemies.begin()+j);
 					layer3.erase(j);
 					lenemies--;
 				}
+
+				if(lenemies-1<j)
+					j--;
 			}
 
 			//Delete laser if too high
@@ -191,13 +222,51 @@ bool GameStep::step1(){
 				layer2.erase(i);
 				lsize--;
 			}
+
+			if(lsize-1<i)
+				i--;
+		}
+
+		//Collision enemies player check
+		for(unsigned int j=0; j<lenemies; j++){
+			//Contact avec le joueur
+			if(lenemies>0 && player->getPosition().y>enemies.at(j)->getPosition().y-64 && player->getPosition().y<enemies.at(j)->getPosition().y+64){
+				if(player->getPosition().x>enemies.at(j)->getPosition().x-64 && player->getPosition().x<enemies.at(j)->getPosition().x+64){
+					this->score-=100;
+					//Delete the enemie
+					enemies.erase(enemies.begin()+j);
+					layer3.erase(j);
+					lenemies--;
+				}
+			}
+			if(lenemies-1<j)
+				j--;
+		}
+
+		//Collision bonus player check
+		for(unsigned int j=0; j<bonus.size(); j++){
+			//Contact avec le joueur
+			if(player->getPosition().y>bonus.at(j)->getPosition().y-64 && player->getPosition().y<bonus.at(j)->getPosition().y+64){
+				if(player->getPosition().x>bonus.at(j)->getPosition().x-64 && player->getPosition().x<bonus.at(j)->getPosition().x+64){
+					this->score+=100;
+					//Delete the enemie
+					bonus.erase(bonus.begin()+j);
+					layer5.erase(j);
+				}
+			}
 		}
 
 		//spawn enemies
 		if(frame%60==0){
-			int r = 0 + (rand() % (width - 0));
+			int r = 0 + (rand() % ((width-128) - 0));
 			enemies.push_back(new AnimatedElement(Texture("grid.png"),sf::Vector2f(r,0), 0.f, 64, 1));
 			layer3.addElement(enemies[enemies.size()-1]);
+		}
+		//spawn bonuses
+		if((frame+10)%600==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			bonus.push_back(new AnimatedElement(Texture("tgs.png"),sf::Vector2f(r,0), 0.f, 64, 1));
+			layer5.addElement(bonus[bonus.size()-1]);
 		}
 
 		//Update enemies
@@ -205,10 +274,35 @@ bool GameStep::step1(){
 			(*i)->move(0,4);
 		}
 
+		//Update bonuses
+		for(std::vector<AnimatedElement*>::iterator i = bonus.begin(); i != bonus.end(); i++){
+			(*i)->move(0,6);
+		}
+
+		//Update explo every 12 frames
+		if(frame%9==0){
+			for(unsigned int i=0; i<exploLifeTime.size(); i++){
+				if(exploLifeTime.at(i)>-1)
+					exploLifeTime.at(i)--;
+				else
+				{
+					exploLifeTime.erase(exploLifeTime.begin()+i);
+					layer4.erase(i);
+				}
+			}
+		}
+
+		if(this->score<0)
+			this->score=0;
+
+		//Update score render
+		scoreText.setString(intTostring(this->score));
+
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);
 		layerManager.draw(*window);
+		window->draw(scoreText);
 		window->display();
 
 		frame++;

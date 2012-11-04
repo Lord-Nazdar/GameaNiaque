@@ -14,6 +14,7 @@ AnimatedElement::AnimatedElement(sf::Texture& pTex, sf::Vector2f pPos = sf::Vect
 	frameSize = pFrameSize;
 	maxFrames = pMaxFrames;
 	frameIndex = 0;
+	setFrame(0);
 }
 
 void AnimatedElement::draw(sf::RenderWindow &window)
@@ -34,7 +35,7 @@ void AnimatedElement::update(int frame)
 
 void AnimatedElement::setFrame(int frame)
 {
-	std::cout << frame << std::endl;
+	//std::cout << frame << std::endl;
 
 	sf::Vector2u size = sprite.getTexture()->getSize();
 	int framesPerLine = size.x/frameSize;
