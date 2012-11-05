@@ -10,6 +10,14 @@ std::string intTostring(int nb){
 	return oss.str();
 }
 
+float easeInOut (int frame, float b, float c, int d){
+	frame = frame/(d/2) ;
+	if(frame<1)
+		return c/2*frame*frame + b ;
+	frame-- ;
+	return -c/2 * (frame*(frame-2) - 1) + b ;
+}
+
 GameStep::GameStep()
 {
 	frame=0;
@@ -24,7 +32,11 @@ void GameStep::init(){
 	width=sf::VideoMode::getDesktopMode().width;
 	srand ( time(NULL) );
 
+	//Initialisation du score
 	this->score=0;
+
+	//Création du player
+	player=new Player;
 }
 
 int GameStep::menu(){
@@ -86,9 +98,11 @@ bool GameStep::step1(){
 	/*----
 	  Note gameplay :
 	  mouvement verouiller écran gauche droite verouiller middle et bas : haut bas
+	  durée ~~2min ou score > 1000
 	------*/
+
 	LayerManager layerManager;
-	Layer layer1(1,0);	//Cell layer
+	Layer layer1(1,0);	//Player cell layer
 
 	//--------Warning:do not add anything other on them---------
 	Layer layer2(1,0);	//Laser layer
@@ -110,13 +124,11 @@ bool GameStep::step1(){
 	Arial.loadFromFile("arial.ttf");
 	sf::Text scoreText;
 
-	//chargement du sprite
-	sf::Vector2f pos((width/2)-32,(height/4)*3);
+	//Création de l'entitée player et positionnement
+	player=new Player(Player::complex);
+	player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
 
-	AnimatedElement *player;
-	player=new AnimatedElement(Texture("grid.png"), pos, 0.f, 64, 1);
-
-	layer1.addElement(player);
+	layer1.addElement(player->player);
 
 	//Vector de laser et de enemies
 	std::vector<AnimatedElement*> laser;
@@ -125,8 +137,12 @@ bool GameStep::step1(){
 
 	//Vector for lifetime
 	std::vector<int> exploLifeTime;
+	sf::Clock clock1;
 
-	while (window->isOpen())
+	//Pour tricher et passer d'un coup
+	bool trollpart1=true;
+
+	while (window->isOpen() && (this->score<1000 || clock1.getElapsedTime().asSeconds()<120 ) && trollpart1)
 	{
 		stepEvent();
 
@@ -142,20 +158,25 @@ bool GameStep::step1(){
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-			if(player->getPosition().y>height/2)
-				player->move(sf::Vector2f(0,-9));}
+			if(player->player->getPosition().y>height/2)
+				player->player->move(sf::Vector2f(0,-player->getVelocity()));}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-			if(player->getPosition().y<height-96)
-				player->move(sf::Vector2f(0,10));}
+			if(player->player->getPosition().y<height-96)
+				player->player->move(sf::Vector2f(0,player->getVelocity()));}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-			if(player->getPosition().x>32)
-				player->move(sf::Vector2f(-9,0));}
+			if(player->player->getPosition().x>32)
+				player->player->move(sf::Vector2f(-player->getVelocity(),0));}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-			if(player->getPosition().x<width-96)
-				player->move(sf::Vector2f(10,0));}
+			if(player->player->getPosition().x<width-96)
+				player->player->move(sf::Vector2f(player->getVelocity(),0));}
+
+		//Supprimer impérativement
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)){
+			trollpart1=false;
+		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)&&!fireactiv){
-			laser.push_back(new AnimatedElement(Texture("laser.png"),player->getPosition(), 0.f, 64, 2));
+			laser.push_back(new AnimatedElement(Texture("laser.png"),player->player->getPosition(), 0.f, 64, 2,0));
 			layer2.addElement(laser[laser.size()-1]);
 			fireactiv=true;
 			score--;
@@ -180,7 +201,7 @@ bool GameStep::step1(){
 				if(lsize>0 && lenemies>0 && laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y-64 && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
 					if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x-64 && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
 						//Generate explosion effect
-						layer4.addElement(new AnimatedElement(Texture("explo.png"),enemies.at(j)->getPosition(), 0.f, 64, 5));
+						layer4.addElement(new AnimatedElement(Texture("explo.png"),enemies.at(j)->getPosition(), 0.f, 64, 5,0));
 						exploLifeTime.push_back(5);
 
 						//Delete the laser
@@ -230,8 +251,8 @@ bool GameStep::step1(){
 		//Collision enemies player check
 		for(unsigned int j=0; j<lenemies; j++){
 			//Contact avec le joueur
-			if(lenemies>0 && player->getPosition().y>enemies.at(j)->getPosition().y-64 && player->getPosition().y<enemies.at(j)->getPosition().y+64){
-				if(player->getPosition().x>enemies.at(j)->getPosition().x-64 && player->getPosition().x<enemies.at(j)->getPosition().x+64){
+			if(lenemies>0 && player->player->getPosition().y>enemies.at(j)->getPosition().y-64 && player->player->getPosition().y<enemies.at(j)->getPosition().y+64){
+				if(player->player->getPosition().x>enemies.at(j)->getPosition().x-64 && player->player->getPosition().x<enemies.at(j)->getPosition().x+64){
 					this->score-=100;
 					//Delete the enemie
 					enemies.erase(enemies.begin()+j);
@@ -246,8 +267,8 @@ bool GameStep::step1(){
 		//Collision bonus player check
 		for(unsigned int j=0; j<bonus.size(); j++){
 			//Contact avec le joueur
-			if(player->getPosition().y>bonus.at(j)->getPosition().y-64 && player->getPosition().y<bonus.at(j)->getPosition().y+64){
-				if(player->getPosition().x>bonus.at(j)->getPosition().x-64 && player->getPosition().x<bonus.at(j)->getPosition().x+64){
+			if(player->player->getPosition().y>bonus.at(j)->getPosition().y-64 && player->player->getPosition().y<bonus.at(j)->getPosition().y+64){
+				if(player->player->getPosition().x>bonus.at(j)->getPosition().x-64 && player->player->getPosition().x<bonus.at(j)->getPosition().x+64){
 					this->score+=100;
 					//Delete the enemie
 					bonus.erase(bonus.begin()+j);
@@ -259,13 +280,13 @@ bool GameStep::step1(){
 		//spawn enemies
 		if(frame%60==0){
 			int r = 0 + (rand() % ((width-128) - 0));
-			enemies.push_back(new AnimatedElement(Texture("grid.png"),sf::Vector2f(r,0), 0.f, 64, 1));
+			enemies.push_back(new AnimatedElement(Texture("grid.png"),sf::Vector2f(r,0), 0.f, 64, 1,0));
 			layer3.addElement(enemies[enemies.size()-1]);
 		}
 		//spawn bonuses
 		if((frame+10)%600==0){
 			int r = 0 + (rand() % ((width-128) - 0));
-			bonus.push_back(new AnimatedElement(Texture("tgs.png"),sf::Vector2f(r,0), 0.f, 64, 1));
+			bonus.push_back(new AnimatedElement(Texture("tgs.png"),sf::Vector2f(r,0), 0.f, 64, 1,0));
 			layer5.addElement(bonus[bonus.size()-1]);
 		}
 
@@ -298,6 +319,98 @@ bool GameStep::step1(){
 		//Update score render
 		scoreText.setString(intTostring(this->score));
 
+
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->draw(scoreText);
+		window->display();
+
+		frame++;
+	}
+
+	int endframe=frame;
+	unsigned int lenemies = enemies.size();
+
+	//Supression de tout les enemies et création explosion
+	for(unsigned int j=0; j<lenemies; j++){
+		//Generate explosion effect
+		layer4.addElement(new AnimatedElement(Texture("explo.png"),enemies.at(j)->getPosition(), 0.f, 64, 5,0));
+		exploLifeTime.push_back(5);
+	}
+
+	enemies.clear();
+	layer3.clear();
+
+	while(frame<endframe+60){
+		//Update explo every 12 frames
+		if(frame%7==0){
+			for(unsigned int i=0; i<exploLifeTime.size(); i++){
+				if(exploLifeTime.at(i)>-1)
+					exploLifeTime.at(i)--;
+				else
+				{
+					exploLifeTime.erase(exploLifeTime.begin()+i);
+					layer4.erase(i);
+				}
+			}
+		}
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->draw(scoreText);
+		window->display();
+		frame++;
+	}
+}
+
+bool GameStep::step1int2(){
+	//Layer
+	LayerManager layerManager;
+	Layer layer1(1,0);	//Player cell layer
+	Layer layer2(1,0);	// Big Cell
+	layerManager.add(&layer1);
+	layerManager.add(&layer2);
+
+	layer1.addElement(player->player); //Ajout de l'entitée player
+	layer2.addElement(new AnimatedElement(Texture("bigcell.png"),sf::Vector2f((width-500)/2,0), 0.f, 500, 1,0));
+
+	//var for ease
+	sf::Vector2f startPos = player->player->getPosition();
+	sf::Vector2f endPos(width/2,0);
+
+	unsigned int frame=0;
+	int red=120;
+	bool incColor=false;
+
+	//Score display
+	sf::Font Arial;
+	Arial.loadFromFile("arial.ttf");
+	sf::Text scoreText;
+
+	while (window->isOpen())
+	{
+		stepEvent();
+
+		if(frame%4==0){
+			if(!incColor){
+				red--;
+				if(red<90)incColor=true;
+			}
+			else{
+				red++;
+				if(red>120)incColor=false;
+			}
+		}
+
+
+
+		//Update score render
+		scoreText.setString(intTostring(this->score));
+
+		player->player->setPosition(sf::Vector2f(easeInOut(frame+1,startPos.x,endPos.x-startPos.x,200),easeInOut(frame,startPos.y,endPos.y-startPos.y,200)));
+
+		std::cout << easeInOut(frame+1,startPos.x,endPos.x-startPos.x,200) << ";" << easeInOut(frame,startPos.y,endPos.y-startPos.y,200) << std::endl;
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);
@@ -362,7 +475,7 @@ bool GameStep::step3(){
 		tabRand[randValue]=0;
 
 		sf::Vector2f pos((((value-1)%nbWidth)*200)+gapW,((floor((value-1)/nbWidth))*200)+gapH);
-		element.push_back(new AnimatedElement(Texture("grid.png"), pos, 0.f, 64, 1));
+		element.push_back(new AnimatedElement(Texture("grid.png"), pos, 0.f, 64, 1,0));
 		layer1.addElement(element[i]);
 	}
 

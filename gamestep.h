@@ -17,6 +17,7 @@ public:
 	int menu();
 	void pauseMenu();
 	bool step1();
+	bool step1int2();
 	bool step2();
 	bool step3();
 	bool step4();
@@ -29,6 +30,7 @@ private:
 	int width;
 	bool mouseButtonDown;
 	int score;
+	Player *player;
 };
 
 #endif // GAMESTEP_H

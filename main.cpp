@@ -17,6 +17,7 @@ int main()
 	switch(gamestep.menu()){
 		case 1:
 			gamestep.step1();
+			gamestep.step1int2();
 		case 2:
 			gamestep.step2();
 		case 3:

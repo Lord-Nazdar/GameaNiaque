@@ -41,6 +41,10 @@ void Layer::erase(unsigned int pos){
 	elementVector.erase(elementVector.begin()+pos);
 }
 
+void Layer::clear(){
+	elementVector.clear();
+}
+
 void Layer::removeElement(Element *element){
 	//elementVector.erase(element);
 }

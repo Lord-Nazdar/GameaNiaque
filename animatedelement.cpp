@@ -1,18 +1,20 @@
 #include "animatedelement.h"
 #include <iostream>
+#include <math.h>
 
 AnimatedElement::AnimatedElement() : Element()
 {
 
 }
 
-AnimatedElement::AnimatedElement(sf::Texture& pTex, sf::Vector2f pPos = sf::Vector2f(0, 0), float pDir = 0.f, int pFrameSize = 64, int pMaxFrames = 1) : Element()
+AnimatedElement::AnimatedElement(sf::Texture& pTex, sf::Vector2f pPos = sf::Vector2f(0, 0), float pDir = 0.f, int pFrameSize = 64, int pMaxFrames = 1, int pstartframe = 0) : Element()
 {
 	sprite.setTexture(pTex);
 	setPosition(pPos);
 	setRotation(pDir);
 	frameSize = pFrameSize;
 	maxFrames = pMaxFrames;
+	startframe = pstartframe;
 	frameIndex = 0;
 	setFrame(0);
 }
@@ -43,6 +45,8 @@ void AnimatedElement::setFrame(int frame)
 	int u = frame % framesPerLine;
 	int v = frame / framesPerLine;
 
-	sprite.setTextureRect(sf::IntRect(u*frameSize, v*frameSize, frameSize, frameSize));
+	//std::cout << (startframe*frameSize)+(u*frameSize) << ";" << ((floor(startframe/framesPerLine))*frameSize)+(v*frameSize) << std::endl;
+
+	sprite.setTextureRect(sf::IntRect((floor(startframe%framesPerLine)*frameSize)+(u*frameSize), ((floor(startframe/framesPerLine))*frameSize)+(v*frameSize), frameSize, frameSize));
 }
 

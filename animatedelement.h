@@ -9,7 +9,7 @@ class AnimatedElement : public Element
 {
 public:
 	AnimatedElement();
-	AnimatedElement(sf::Texture& pTex, sf::Vector2f pPos, float pOrientation, int frameSize, int maxFrames);
+	AnimatedElement(sf::Texture& pTex, sf::Vector2f pPos, float pOrientation, int frameSize, int maxFrames, int pstartframe);
 
 
 	virtual void draw(sf::RenderWindow &window);
@@ -20,6 +20,7 @@ protected:
 	int frameSize;
 	int maxFrames;
 	int frameIndex;
+	int startframe;
 
 };
 

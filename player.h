@@ -19,11 +19,13 @@ public:
     void accelerate(); // Accélère dans la direction pointée
     void turnRight(); // Sens horaire
     void turnLeft(); // Sens anti-horaire
+	float getVelocity();
+
+	AnimatedElement *player;
 
 private:
 	Style style;	//Style of the virus (3 values):icosahedral;helical;complex
-    sf::Vector2f velocity;
-
+	float velocity;
 
 };
 
