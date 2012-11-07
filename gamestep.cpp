@@ -10,12 +10,8 @@ std::string intTostring(int nb){
 	return oss.str();
 }
 
-float easeInOut (int frame, float b, float c, int d){
-	frame = frame/(d/2) ;
-	if(frame<1)
-		return c/2*frame*frame + b ;
-	frame-- ;
-	return -c/2 * (frame*(frame-2) - 1) + b ;
+float moveTo (int frame, float posFrom, float posTo, float duration){
+	return (posTo-posFrom)/(duration*1.0);
 }
 
 GameStep::GameStep()
@@ -365,6 +361,8 @@ bool GameStep::step1(){
 }
 
 bool GameStep::step1int2(){
+	return true;
+
 	//Layer
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Player cell layer
@@ -373,14 +371,14 @@ bool GameStep::step1int2(){
 	layerManager.add(&layer2);
 
 	layer1.addElement(player->player); //Ajout de l'entitée player
-	layer2.addElement(new AnimatedElement(Texture("bigcell.png"),sf::Vector2f((width-500)/2,0), 0.f, 500, 1,0));
+	layer2.addElement(new AnimatedElement(Texture("cellule.png"),sf::Vector2f((width-500)/2,-50), 0.f, 500, 1,0));
 
 	//var for ease
 	sf::Vector2f startPos = player->player->getPosition();
 	sf::Vector2f endPos(width/2,0);
 
-	unsigned int frame=0;
-	int red=120;
+	unsigned int frame = 0;
+	int red = 120;
 	bool incColor=false;
 
 	//Score display
@@ -408,9 +406,9 @@ bool GameStep::step1int2(){
 		//Update score render
 		scoreText.setString(intTostring(this->score));
 
-		player->player->setPosition(sf::Vector2f(easeInOut(frame+1,startPos.x,endPos.x-startPos.x,200),easeInOut(frame,startPos.y,endPos.y-startPos.y,200)));
+		player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));
 
-		std::cout << easeInOut(frame+1,startPos.x,endPos.x-startPos.x,200) << ";" << easeInOut(frame,startPos.y,endPos.y-startPos.y,200) << std::endl;
+		std::cout << moveTo(frame+1,startPos.x,endPos.x,200) << ";" << moveTo(frame,startPos.y,endPos.y,200) << std::endl;
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);
@@ -423,7 +421,7 @@ bool GameStep::step1int2(){
 }
 
 bool GameStep::step2(){
-
+	return true;
 }
 
 bool GameStep::step3(){
