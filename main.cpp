@@ -17,6 +17,7 @@ int main()
 	//Gamestep Logo apparences
 	gamestep.logo();
 
+	//Gamestep menu
 	switch(gamestep.menu()){
 		case 1:
 			gamestep.step1();
