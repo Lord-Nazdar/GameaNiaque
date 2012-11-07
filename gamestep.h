@@ -16,6 +16,7 @@ public:
 	void init();
 	int menu();
 	void pauseMenu();
+	bool logo();
 	bool step1();
 	bool step1int2();
 	bool step2();

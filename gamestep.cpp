@@ -35,6 +35,59 @@ void GameStep::init(){
 	player=new Player;
 }
 
+bool GameStep::logo(){
+
+	Layer layer1(1,0);	//Logo apparences layer
+	Layer layer2(1,0);	//Logo gameaniaque layer
+	Layer layer3(1,0);	//Logo efrei layer
+
+	sf::RectangleShape fade3(sf::Vector2f(width, height));
+	sf::RectangleShape fade2(sf::Vector2f(width, height));
+	sf::RectangleShape fade1(sf::Vector2f(width, height));
+
+	layer1.addElement(new Element(Texture("applogo.png"),sf::Vector2f((width/2)-346,(height/2)-111), 0.f));
+	layer2.addElement(new Element(Texture("gamelogo.png"),sf::Vector2f((width/2)-346,(height/2)-59.5), 0.f));
+	layer3.addElement(new Element(Texture("efreilogo.png"),sf::Vector2f((width/2)-346,(height/2)-166), 0.f));
+
+	int frame=0;
+	fade1.setPosition(sf::Vector2f(0,0));
+	fade1.setFillColor(sf::Color(0,0,0,255));
+	fade2.setPosition(sf::Vector2f(0,0));
+	fade2.setFillColor(sf::Color(0,0,0,255));
+	fade3.setPosition(sf::Vector2f(0,0));
+	fade3.setFillColor(sf::Color(0,0,0,255));
+	while(frame<770 && window->isOpen())
+	{
+		stepEvent();
+
+		if(frame<255){
+			fade1.setFillColor(sf::Color(0,0,0,255-frame));
+		}
+		else if(frame>260&&frame<515){
+			fade2.setFillColor(sf::Color(0,0,0,255-(frame-260)));
+		}
+		else if(frame>520&&frame<770){
+			fade3.setFillColor(sf::Color(0,0,0,255-(frame-520)));
+		}
+
+
+		window->clear(sf::Color(0,0,0));
+
+		if(frame>510&&frame<765)
+			layer3.draw(*window,sf::RenderStates::Default);
+		window->draw(fade3);
+		if(frame>255&&frame<510)
+			layer2.draw(*window,sf::RenderStates::Default);
+		window->draw(fade2);
+		if(frame<255)
+			layer1.draw(*window,sf::RenderStates::Default);
+		window->draw(fade1);
+
+		window->display();
+		frame++;
+	}
+}
+
 int GameStep::menu(){
 
 	return 1;
