@@ -1,7 +1,7 @@
 #ifndef ANIMATEDELEMENT_H
 #define ANIMATEDELEMENT_H
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <string>
 #include "element.h"
 

@@ -1,0 +1,334 @@
+#include "../gamestep.h"
+
+bool GameStep::step1(){
+    return true;
+
+	srand(time(NULL));
+	/*----
+	  Note gameplay :
+	  mouvement verouiller écran gauche droite verouiller middle et bas : haut bas
+	  durée ~~2min ou score > 1000
+	------*/
+
+	LayerManager layerManager;
+	Layer layer1(1,0);	//Player cell layer
+
+	//--------Warning:do not add anything other on them---------
+	Layer layer2(1,0);	//Laser layer
+	Layer layer3(1,1);	//Enemies layer
+	Layer layer4(1,0);	//Explosion layer
+	Layer layer5(1,1);	//Bonus Layer
+	layerManager.add(&layer2);
+	layerManager.add(&layer3);
+	layerManager.add(&layer4);
+	layerManager.add(&layer5);
+	layerManager.add(&layer1);
+	unsigned int frame=0;
+	int red=120;
+	bool incColor=false;
+	bool fireactiv=false; //trigger when fire press
+
+	//Score display
+	sf::Font Arial;
+	Arial.loadFromFile("arial.ttf");
+	sf::Text scoreText;
+
+	//Création de l'entitée player et positionnement
+	player=new Player(Player::complex);
+	player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
+
+	layer1.addElement(player->player);
+
+	//Vector de laser et de enemies
+	std::vector<AnimatedElement*> laser;
+	std::vector<AnimatedElement*> enemies;
+	std::vector<AnimatedElement*> bonus;
+
+	//Vector for lifetime
+	std::vector<int> exploLifeTime;
+	sf::Clock clock1;
+
+	//Pour tricher et passer d'un coup
+	bool trollpart1=true;
+
+	while (window->isOpen() && (this->score<1000 || clock1.getElapsedTime().asSeconds()<120 ) && trollpart1)
+	{
+		stepEvent();
+
+		if(frame%4==0){
+			if(!incColor){
+				red--;
+				if(red<90)incColor=true;
+			}
+			else{
+				red++;
+				if(red>120)incColor=false;
+			}
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+			if(player->player->getPosition().y>height/2)
+				player->player->move(sf::Vector2f(0,-player->getVelocity()));}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+			if(player->player->getPosition().y<height-96)
+				player->player->move(sf::Vector2f(0,player->getVelocity()));}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+			if(player->player->getPosition().x>32)
+				player->player->move(sf::Vector2f(-player->getVelocity(),0));}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+			if(player->player->getPosition().x<width-96)
+				player->player->move(sf::Vector2f(player->getVelocity(),0));}
+
+		//Supprimer impérativement
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)){
+			trollpart1=false;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)&&!fireactiv){
+			laser.push_back(new AnimatedElement(Texture("laser.png"),player->player->getPosition(), 0.f, 64, 2,0));
+			layer2.addElement(laser[laser.size()-1]);
+			fireactiv=true;
+			score--;
+		}
+		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			fireactiv=false;
+
+
+		using namespace std;
+
+		//Size of vector
+		unsigned int lsize = laser.size();
+		unsigned int lenemies = enemies.size();
+
+		//Update laser
+		for(unsigned int i=0; i<lsize; i++){
+			laser.at(i)->move(0,-11);
+
+			//Collision check!
+			for(unsigned int j=0; j<lenemies; j++){
+
+				if(lsize>0 && lenemies>0 && laser.at(i)->getPosition().y>enemies.at(j)->getPosition().y-64 && laser.at(i)->getPosition().y<enemies.at(j)->getPosition().y+64){
+					if(laser.at(i)->getPosition().x>enemies.at(j)->getPosition().x-64 && laser.at(i)->getPosition().x<enemies.at(j)->getPosition().x+64){
+						//Generate explosion effect
+						layer4.addElement(new AnimatedElement(Texture("explo.png"),enemies.at(j)->getPosition(), 0.f, 64, 5,0));
+						exploLifeTime.push_back(5);
+
+						//Delete the laser
+						laser.erase(laser.begin()+i);
+						layer2.erase(i);
+						lsize--;
+
+						//Delete the enemie
+						enemies.erase(enemies.begin()+j);
+						layer3.erase(j);
+						lenemies--;
+
+						//inc score
+						this->score+=10;
+
+					}
+
+					//An cas de double suppression
+					if(lenemies-1<j)
+						j--;
+					if(lsize-1<i)
+						i--;
+				}
+
+				//Delete enemie if too low
+				else if(lenemies>0 && enemies.at(j)->getPosition().y>height+128){
+					enemies.erase(enemies.begin()+j);
+					layer3.erase(j);
+					lenemies--;
+				}
+
+				if(lenemies-1<j)
+					j--;
+			}
+
+			//Delete laser if too high
+			if(lsize>0 && laser.at(i)->getPosition().y<-128){
+				laser.erase(laser.begin()+i);
+				layer2.erase(i);
+				lsize--;
+			}
+
+			if(lsize-1<i)
+				i--;
+		}
+
+		//Collision enemies player check
+		for(unsigned int j=0; j<lenemies; j++){
+			//Contact avec le joueur
+			if(lenemies>0 && player->player->getPosition().y>enemies.at(j)->getPosition().y-64 && player->player->getPosition().y<enemies.at(j)->getPosition().y+64){
+				if(player->player->getPosition().x>enemies.at(j)->getPosition().x-64 && player->player->getPosition().x<enemies.at(j)->getPosition().x+64){
+					this->score-=100;
+					//Delete the enemie
+					enemies.erase(enemies.begin()+j);
+					layer3.erase(j);
+					lenemies--;
+				}
+			}
+			if(lenemies-1<j)
+				j--;
+		}
+
+		//Collision bonus player check
+		for(unsigned int j=0; j<bonus.size(); j++){
+			//Contact avec le joueur
+			if(player->player->getPosition().y>bonus.at(j)->getPosition().y-64 && player->player->getPosition().y<bonus.at(j)->getPosition().y+64){
+				if(player->player->getPosition().x>bonus.at(j)->getPosition().x-64 && player->player->getPosition().x<bonus.at(j)->getPosition().x+64){
+					this->score+=100;
+					//Delete the enemie
+					bonus.erase(bonus.begin()+j);
+					layer5.erase(j);
+				}
+			}
+		}
+
+		//spawn enemies
+		if(frame%60==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			enemies.push_back(new AnimatedElement(Texture("grid.png"),sf::Vector2f(r,0), 0.f, 64, 1,0));
+			layer3.addElement(enemies[enemies.size()-1]);
+		}
+		//spawn bonuses
+		if((frame+10)%600==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			bonus.push_back(new AnimatedElement(Texture("tgs.png"),sf::Vector2f(r,0), 0.f, 64, 1,0));
+			layer5.addElement(bonus[bonus.size()-1]);
+		}
+
+		//Update enemies
+		for(std::vector<AnimatedElement*>::iterator i = enemies.begin(); i != enemies.end(); i++){
+			(*i)->move(0,4);
+		}
+
+		//Update bonuses
+		for(std::vector<AnimatedElement*>::iterator i = bonus.begin(); i != bonus.end(); i++){
+			(*i)->move(0,6);
+		}
+
+		//Update explo every 12 frames
+		if(frame%9==0){
+			for(unsigned int i=0; i<exploLifeTime.size(); i++){
+				if(exploLifeTime.at(i)>-1)
+					exploLifeTime.at(i)--;
+				else
+				{
+					exploLifeTime.erase(exploLifeTime.begin()+i);
+					layer4.erase(i);
+				}
+			}
+		}
+
+		if(this->score<0)
+			this->score=0;
+
+		//Update score render
+		scoreText.setString(intTostring(this->score));
+
+
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->draw(scoreText);
+		window->display();
+
+		frame++;
+	}
+
+	int endframe=frame;
+	unsigned int lenemies = enemies.size();
+
+	//Supression de tout les enemies et création explosion
+	for(unsigned int j=0; j<lenemies; j++){
+		//Generate explosion effect
+		layer4.addElement(new AnimatedElement(Texture("explo.png"),enemies.at(j)->getPosition(), 0.f, 64, 5,0));
+		exploLifeTime.push_back(5);
+	}
+
+	enemies.clear();
+	layer3.clear();
+
+	while(frame<endframe+60){
+		//Update explo every 12 frames
+		if(frame%7==0){
+			for(unsigned int i=0; i<exploLifeTime.size(); i++){
+				if(exploLifeTime.at(i)>-1)
+					exploLifeTime.at(i)--;
+				else
+				{
+					exploLifeTime.erase(exploLifeTime.begin()+i);
+					layer4.erase(i);
+				}
+			}
+		}
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->draw(scoreText);
+		window->display();
+		frame++;
+	}
+}
+
+bool GameStep::step1int2(){
+	return true;
+
+	//Layer
+	LayerManager layerManager;
+	Layer layer1(1,0);	//Player cell layer
+	Layer layer2(1,0);	// Big Cell
+	layerManager.add(&layer1);
+	layerManager.add(&layer2);
+
+	layer1.addElement(player->player); //Ajout de l'entitée player
+	layer2.addElement(new AnimatedElement(Texture("cellule.png"),sf::Vector2f((width-500)/2,-50), 0.f, 500, 1,0));
+
+	//var for ease
+	sf::Vector2f startPos = player->player->getPosition();
+	sf::Vector2f endPos(width/2,0);
+
+	unsigned int frame = 0;
+	int red = 120;
+	bool incColor=false;
+
+	//Score display
+	sf::Font Arial;
+	Arial.loadFromFile("arial.ttf");
+	sf::Text scoreText;
+
+	while (window->isOpen())
+	{
+		stepEvent();
+
+		if(frame%4==0){
+			if(!incColor){
+				red--;
+				if(red<90)incColor=true;
+			}
+			else{
+				red++;
+				if(red>120)incColor=false;
+			}
+		}
+
+
+
+		//Update score render
+		scoreText.setString(intTostring(this->score));
+
+		player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));
+
+		std::cout << moveTo(frame+1,startPos.x,endPos.x,200) << ";" << moveTo(frame,startPos.y,endPos.y,200) << std::endl;
+
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->draw(scoreText);
+		window->display();
+
+		frame++;
+	}
+}

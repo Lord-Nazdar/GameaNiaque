@@ -1,8 +1,13 @@
 #ifndef GAMESTEP_H
 #define GAMESTEP_H
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
+#include <time.h>
+#include <math.h>
+#include <sstream>
+
+#include "textures.h"
 #include "layer.h"
 #include "layermanager.h"
 #include "player.h"
@@ -24,6 +29,7 @@ public:
 	bool step4();
 	void stepEvent();
 	int step3Mouse(std::vector<Element*> element);
+
 private:
 	sf::RenderWindow *window;
 	int frame;
@@ -33,5 +39,8 @@ private:
 	int score;
 	Player *player;
 };
+
+float moveTo (int frame, float posFrom, float posTo, float duration);
+std::string intTostring(int nb);
 
 #endif // GAMESTEP_H

@@ -4,3 +4,8 @@
 /debug/*
 /release/*
 /*.psd
+/bin/*
+/obj/*
+/*.dll
+/GameaNiaque.cbp
+/GameaNiaque.depend

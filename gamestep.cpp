@@ -1,9 +1,6 @@
-#include "gamestep.h"
-#include "textures.h"
-#include <time.h>
-#include "math.h"
-#include <sstream>
 
+<<<<<<< HEAD
+=======
 std::string intTostring(int nb){
 	std::ostringstream oss;
 	oss << nb;
@@ -60,6 +57,9 @@ bool GameStep::logo(){
 	{
 		stepEvent();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+			frame=765;
+
 		if(frame<255){
 			fade1.setFillColor(sf::Color(0,0,0,255-frame));
 		}
@@ -89,8 +89,83 @@ bool GameStep::logo(){
 }
 
 int GameStep::menu(){
+	//Layer
+	LayerManager layerManager;
+	Layer layer1(1,0);	//Map complet
+	Layer layer2(1,0);	//Map element
+	layerManager.add(&layer1);
+	layerManager.add(&layer2);
 
-	return 1;
+	//marge left up
+	float margel=(width/2)-500;
+	float margeu=(height/2)-250;
+
+	layer1.addElement(new Element(Texture("menuMapC.png"),sf::Vector2f(margel,margeu), 0.f));
+
+
+	/*layer2.addElement(new Element(Texture("menuMapC.png"),sf::Vector2f(margel,margeu, 0.f));
+	layer2.addElement(new Element(Texture("menuMapAN.png"),sf::Vector2f(margel,margeu, 0.f));
+	layer2.addElement(new Element(Texture("menuMapAS.png"),sf::Vector2f(margel,margeu, 0.f));
+	layer2.addElement(new Element(Texture("menuMapAU.png"),sf::Vector2f(margel,margeu, 0.f));
+	layer2.addElement(new Element(Texture("menuMapEU.png"),sf::Vector2f(margel,margeu, 0.f));
+	layer2.addElement(new Element(Texture("menuMapRU.png"),sf::Vector2f(margel,margeu, 0.f));
+	layer2.addElement(new Element(Texture("menuMapS.png"),sf::Vector2f(margel,margeu, 0.f));*/
+
+	unsigned int frame = 0;
+	int red = 120;
+	bool incColor=false;
+
+	while (window->isOpen())
+	{
+		stepEvent();
+
+		if(frame%4==0){
+			if(!incColor){
+				red--;
+				if(red<90)incColor=true;
+			}
+			else{
+				red++;
+				if(red>120)incColor=false;
+			}
+		}
+
+		sf::Mouse mouse;
+
+		if(mouse.getPosition().x>margel && mouse.getPosition().x<margel+423 && mouse.getPosition().y>margeu && mouse.getPosition().y<margeu+300 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapAN.png"),sf::Vector2f(margel,margeu), 0.f));
+		}
+		else if(mouse.getPosition().x>margel+200 && mouse.getPosition().x<margel+200+170 && mouse.getPosition().y>margeu+300 && mouse.getPosition().y<margeu+300+200 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapAS.png"),sf::Vector2f(margel,margeu), 0.f));
+		}
+		else if(mouse.getPosition().x>margel+425 && mouse.getPosition().x<margel+425+205 && mouse.getPosition().y>margeu+75 && mouse.getPosition().y<margeu+75+167 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapEU.png"),sf::Vector2f(margel,margeu), 0.f));
+		}
+		else if(mouse.getPosition().x>margel+400 && mouse.getPosition().x<margel+400+216 && mouse.getPosition().y>margeu+236 && mouse.getPosition().y<margeu+236+214 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapS.png"),sf::Vector2f(margel,margeu), 0.f));
+		}
+		else if(mouse.getPosition().x>margel+635 && mouse.getPosition().x<margel+635+351 && mouse.getPosition().y>margeu && mouse.getPosition().y<margeu+344 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapRU.png"),sf::Vector2f(margel,margeu), 0.f));
+		}
+		else if(mouse.getPosition().x>margel+750 && mouse.getPosition().x<margel+750+170 && mouse.getPosition().y>margeu+350 && mouse.getPosition().y<margeu+350+132 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapAU.png"),sf::Vector2f(margel,margeu), 0.f));
+		}
+		else
+			layer2.clear();
+
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->display();
+
+		frame++;
+	}
 }
 
 void GameStep::pauseMenu(){	//Not very clear :(
@@ -617,3 +692,4 @@ int GameStep::step3Mouse(std::vector<Element*> element){
 		return 0;
 	}
 }
+>>>>>>> 47a9c72a31694071eab794b259a4b88698240850
