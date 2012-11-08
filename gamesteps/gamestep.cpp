@@ -88,9 +88,145 @@ bool GameStep::logo(){
 }
 
 int GameStep::menu(){
+	//Layer
+	LayerManager layerManager;
+	Layer layer1(1,0);	//Map complet
+	Layer layer2(1,0);	//Map element
+	layerManager.add(&layer1);
+	layerManager.add(&layer2);
 
-	return 1;
+	sf::RectangleShape fill(sf::Vector2f(200, 40));
+	fill.setFillColor(sf::Color(130,130,130,0));
+	sf::RectangleShape fillcolor(sf::Vector2f(30, 40));
+	fillcolor.setFillColor(sf::Color(96,64,115,0));
+
+	sf::RectangleShape fade1(sf::Vector2f(width, height));
+	fade1.setPosition(sf::Vector2f(0,0));
+	fade1.setFillColor(sf::Color(0,0,0,255));
+
+	//marge left up
+	float margel=(width/2)-500;
+	float margeu=(height/2)-250;
+
+	layer1.addElement(new Element(Texture("menuMapC.png"),sf::Vector2f(margel,margeu), 0.f));
+
+	//name display
+	sf::Font Arial;
+	Arial.loadFromFile("arial.ttf");
+	sf::Text name;
+	name.setCharacterSize(30);
+	name.setColor(sf::Color::Black);
+
+	unsigned int frame = 0;
+	int red = 120;
+	bool incColor=false;
+
+	while (window->isOpen())
+	{
+		stepEvent();
+
+		if(frame*2<255){
+			fade1.setFillColor(sf::Color(0,0,0,255-frame*2));
+		}
+
+		if(frame%4==0){
+			if(!incColor){
+				red--;
+				if(red<90)incColor=true;
+			}
+			else{
+				red++;
+				if(red>120)incColor=false;
+			}
+		}
+
+		sf::Mouse mouse;
+
+		if(mouse.getPosition().x>margel && mouse.getPosition().x<margel+423 && mouse.getPosition().y>margeu && mouse.getPosition().y<margeu+300 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapAN.png"),sf::Vector2f(margel,margeu), 0.f));
+			fill.setFillColor(sf::Color(130,130,130,255));
+			fillcolor.setFillColor(sf::Color(96,64,115,255));
+			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			name.setString("Crédits");
+			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+		}
+		else if(mouse.getPosition().x>margel+200 && mouse.getPosition().x<margel+200+170 && mouse.getPosition().y>margeu+300 && mouse.getPosition().y<margeu+300+200 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapAS.png"),sf::Vector2f(margel,margeu), 0.f));
+			fill.setFillColor(sf::Color(130,130,130,255));
+			fillcolor.setFillColor(sf::Color(226,73,17,255));
+			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			name.setString("Web");
+			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+		}
+		else if(mouse.getPosition().x>margel+425 && mouse.getPosition().x<margel+425+205 && mouse.getPosition().y>margeu+75 && mouse.getPosition().y<margeu+75+167 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapEU.png"),sf::Vector2f(margel,margeu), 0.f));
+			fill.setFillColor(sf::Color(130,130,130,255));
+			fillcolor.setFillColor(sf::Color(96,174,222,255));
+			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			name.setString("Jouer");
+			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+			if(mouse.isButtonPressed(sf::Mouse::Left))
+				return 1;
+
+		}
+		else if(mouse.getPosition().x>margel+400 && mouse.getPosition().x<margel+400+216 && mouse.getPosition().y>margeu+236 && mouse.getPosition().y<margeu+236+214 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapS.png"),sf::Vector2f(margel,margeu), 0.f));
+			fill.setFillColor(sf::Color(130,130,130,255));
+			fillcolor.setFillColor(sf::Color(216,216,204,255));
+			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			name.setString("Générateur");
+			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+		}
+		else if(mouse.getPosition().x>margel+635 && mouse.getPosition().x<margel+635+351 && mouse.getPosition().y>margeu && mouse.getPosition().y<margeu+344 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapRU.png"),sf::Vector2f(margel,margeu), 0.f));
+			fill.setFillColor(sf::Color(130,130,130,255));
+			fillcolor.setFillColor(sf::Color(107,110,111,255));
+			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			name.setString("Instruction");
+			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+		}
+		else if(mouse.getPosition().x>margel+750 && mouse.getPosition().x<margel+750+170 && mouse.getPosition().y>margeu+350 && mouse.getPosition().y<margeu+350+132 ){
+			layer2.clear();
+			layer2.addElement(new Element(Texture("menuMapAU.png"),sf::Vector2f(margel,margeu), 0.f));
+			fill.setFillColor(sf::Color(130,130,130,255));
+			fillcolor.setFillColor(sf::Color(81,205,135,255));
+			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
+			name.setString("Quitter");
+			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+			if(mouse.isButtonPressed(sf::Mouse::Left))
+				window->close();
+		}
+		else{
+			layer2.clear();
+			fill.setFillColor(sf::Color(130,130,130,0));
+			fillcolor.setFillColor(sf::Color(96,64,115,0));
+			name.setString("");
+		}
+
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->draw(fill);
+		window->draw(fillcolor);
+		window->draw(name);
+		window->draw(fade1);
+		window->display();
+
+		frame++;
+	}
 }
+
 
 void GameStep::pauseMenu(){	//Not very clear :(
 	int activ=0;	//choice number
