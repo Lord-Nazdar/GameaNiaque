@@ -29,6 +29,9 @@ int main()
 		case 4:
 			gamestep.step4();
 			break;
+		case 5:
+			gamestep.generateur();
+			break;
 	}
 
 	return 0;

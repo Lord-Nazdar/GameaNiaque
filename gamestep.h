@@ -21,6 +21,8 @@ public:
 	void init();
 	int menu();
 	void pauseMenu();
+	void instruction();
+	bool generateur();
 	bool logo();
 	bool step1();
 	bool step1int2();

@@ -1,7 +1,7 @@
 #include "../gamestep.h"
 
 bool GameStep::step1(){
-    return true;
+	//return true;
 
 	srand(time(NULL));
 	/*----
@@ -9,6 +9,9 @@ bool GameStep::step1(){
 	  mouvement verouiller écran gauche droite verouiller middle et bas : haut bas
 	  durée ~~2min ou score > 1000
 	------*/
+
+	//Masquer le curseur
+	window->setMouseCursorVisible(false);
 
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Player cell layer
@@ -274,9 +277,9 @@ bool GameStep::step1(){
 }
 
 bool GameStep::step1int2(){
-	return true;
+	//return true;
 
-	//Layer
+	//Layer	
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Player cell layer
 	Layer layer2(1,0);	// Big Cell
