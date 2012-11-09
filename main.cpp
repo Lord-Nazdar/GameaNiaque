@@ -6,6 +6,8 @@
 
 using namespace std;
 
+void case1(GameStep gamestep);
+
 int main()
 {
 	cout << "v0.7.1" << endl;
@@ -20,9 +22,7 @@ int main()
 	//Gamestep menu
 	switch(gamestep.menu()){
 		case 1:
-			gamestep.prestep1();
-			gamestep.step1();
-			gamestep.step1int2();
+		case1(gamestep);
 		case 2:
 			gamestep.step2();
 		case 3:
@@ -38,4 +38,15 @@ int main()
 	return 0;
 }
 
+void case1(GameStep gamestep){
+	//Music maestro
+	sf::Music menuMusic;
+	//logoMusic=new sf::Music("logo.wav");
+	menuMusic.openFromFile("music/part1.wav");
+	menuMusic.play();
+	menuMusic.setLoop(true);
 
+	gamestep.prestep1();
+	gamestep.step1();
+	gamestep.step1int2();
+}

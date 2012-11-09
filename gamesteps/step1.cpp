@@ -69,7 +69,7 @@ bool GameStep::prestep1(){
 	acte.setFont(Arial);
 	acte.setColor(sf::Color(0,0,0,0));
 	acte.setPosition(width/2-400,height/2-200);
-	acte.setString("Acte 1\n     Propagation");
+	acte.setString("Acte 1\n     Contamination");
 
 	while (window->isOpen() && frame<700)
 	{
@@ -411,21 +411,27 @@ bool GameStep::step1int2(){
 
 	layer1.addElement(player->player); //Ajout de l'entitée player
 
-	AnimatedElement *cell;
-	cell = new AnimatedElement(Texture("cellule.png"),sf::Vector2f((width-500)/2,-50), 0.f, 500, 1,0);
+	Element *cell;
+	cell = new Element(Texture("cellule.png"),sf::Vector2f((width-500)/2,(height-500)/2), 0.f);
 	layer2.addElement(cell);
 
 	//var for ease
 	sf::Vector2f startPos = player->player->getPosition();
-	sf::Vector2f endPos(width/2,0);
+	sf::Vector2f endPos(width/2,(height/2)-50);
+
+	//text display
+	sf::Font Arial;
+	Arial.loadFromFile("pixelart.ttf");
+	//Text part 4 : acte
+	sf::Text acte;
+	acte.setFont(Arial);
+	acte.setColor(sf::Color(0,0,0,0));
+	acte.setPosition(width/2-400,height/2-200);
+	acte.setString("Acte 2\n     Reproduction");
 
 	unsigned int frame = 0;
 
 	bool incColor=false;
-
-	//Score display
-	sf::Font Arial;
-	Arial.loadFromFile("pixelart.ttf");
 	sf::Text scoreText;
 	scoreText.setFont(Arial);
 	scoreText.setPosition(20,20);
@@ -448,17 +454,26 @@ bool GameStep::step1int2(){
 
 
 		//Update score render
-		scoreText.setString(intTostring(this->score));
+		scoreText.setString(intTostring(score));
 
 		if(frame<200)
 			player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));
-		else if(frame>200 && frame<400)
-			cell->setScale(0.1,0.1);
+		else if(frame>200 && frame<274){
+			cell->setScale(1+(frame-200.0)/100,1+(frame-200.0)/100);
+			cell->setPosition(sf::Vector2f((width-(500*cell->getScale().x))/2,(height-(500*cell->getScale().y))/2));
+		}
+		if(frame>274 && frame <374){
+			acte.setColor(sf::Color(0,0,0,(frame-274)*2.5));
+		}
+		if(frame>450){
+			return true;
+		}
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);
 		layerManager.draw(*window);
 		window->draw(scoreText);
+		window->draw(acte);
 		window->display();
 
 		frame++;

@@ -2,12 +2,14 @@
 #define GAMESTEP_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include <time.h>
 #include <math.h>
 #include <sstream>
 
 #include "textures.h"
+#include "music.h"
 #include "layer.h"
 #include "layermanager.h"
 #include "player.h"

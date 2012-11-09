@@ -38,6 +38,12 @@ bool GameStep::logo(){
 	//Masquer le curseur
 	window->setMouseCursorVisible(false);
 
+	//Music maestro
+	sf::Music logoMusic;
+	//logoMusic=new sf::Music("logo.wav");
+	logoMusic.openFromFile("music/logo.wav");
+	logoMusic.play();
+
 	Layer layer1(1,0);	//Logo apparences layer
 	Layer layer2(1,0);	//Logo gameaniaque layer
 	Layer layer3(1,0);	//Logo efrei layer
@@ -94,6 +100,13 @@ bool GameStep::logo(){
 
 int GameStep::menu(){
 
+	//Music maestro
+	sf::Music menuMusic;
+	//logoMusic=new sf::Music("logo.wav");
+	menuMusic.openFromFile("music/menu.wav");
+	menuMusic.play();
+	menuMusic.setLoop(true);
+
 	//Masquer le curseur
 	window->setMouseCursorVisible(true);
 	//Layer
@@ -129,6 +142,13 @@ int GameStep::menu(){
 	unsigned int frame = 0;
 	bool incColor=false;
 
+
+	sf::Music clicMusic;
+	//logoMusic=new sf::Music("logo.wav");
+	clicMusic.openFromFile("music/clickMenu.wav");
+
+	int playClic=0;
+
 	while (window->isOpen())
 	{
 		stepEvent();
@@ -151,6 +171,11 @@ int GameStep::menu(){
 		sf::Mouse mouse;
 
 		if(mouse.getPosition().x>margel && mouse.getPosition().x<margel+423 && mouse.getPosition().y>margeu && mouse.getPosition().y<margeu+300 ){
+			if(playClic!=1){
+				clicMusic.play();
+				playClic=1;
+			}
+
 			layer2.clear();
 			layer2.addElement(new Element(Texture("menuMapAN.png"),sf::Vector2f(margel,margeu), 0.f));
 			fill.setFillColor(sf::Color(130,130,130,255));
@@ -161,6 +186,12 @@ int GameStep::menu(){
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
 		}
 		else if(mouse.getPosition().x>margel+200 && mouse.getPosition().x<margel+200+170 && mouse.getPosition().y>margeu+300 && mouse.getPosition().y<margeu+300+200 ){
+			if(playClic!=2){
+				clicMusic.play();
+				playClic=2;
+			}
+
+
 			layer2.clear();
 			layer2.addElement(new Element(Texture("menuMapAS.png"),sf::Vector2f(margel,margeu), 0.f));
 			fill.setFillColor(sf::Color(130,130,130,255));
@@ -171,6 +202,12 @@ int GameStep::menu(){
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
 		}
 		else if(mouse.getPosition().x>margel+425 && mouse.getPosition().x<margel+425+205 && mouse.getPosition().y>margeu+75 && mouse.getPosition().y<margeu+75+167 ){
+			if(playClic!=3){
+				clicMusic.play();
+				playClic=3;
+			}
+
+
 			layer2.clear();
 			layer2.addElement(new Element(Texture("menuMapEU.png"),sf::Vector2f(margel,margeu), 0.f));
 			fill.setFillColor(sf::Color(130,130,130,255));
@@ -184,6 +221,12 @@ int GameStep::menu(){
 
 		}
 		else if(mouse.getPosition().x>margel+400 && mouse.getPosition().x<margel+400+216 && mouse.getPosition().y>margeu+236 && mouse.getPosition().y<margeu+236+214 ){
+			if(playClic!=4){
+				clicMusic.play();
+				playClic=4;
+			}
+
+
 			layer2.clear();
 			layer2.addElement(new Element(Texture("menuMapS.png"),sf::Vector2f(margel,margeu), 0.f));
 			fill.setFillColor(sf::Color(130,130,130,255));
@@ -196,6 +239,12 @@ int GameStep::menu(){
 				return 5;
 		}
 		else if(mouse.getPosition().x>margel+635 && mouse.getPosition().x<margel+635+351 && mouse.getPosition().y>margeu && mouse.getPosition().y<margeu+344 ){
+			if(playClic!=5){
+				clicMusic.play();
+				playClic=5;
+			}
+
+
 			layer2.clear();
 			layer2.addElement(new Element(Texture("menuMapRU.png"),sf::Vector2f(margel,margeu), 0.f));
 			fill.setFillColor(sf::Color(130,130,130,255));
@@ -206,6 +255,12 @@ int GameStep::menu(){
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
 		}
 		else if(mouse.getPosition().x>margel+750 && mouse.getPosition().x<margel+750+170 && mouse.getPosition().y>margeu+350 && mouse.getPosition().y<margeu+350+132 ){
+			if(playClic!=6){
+				clicMusic.play();
+				playClic=6;
+			}
+
+
 			layer2.clear();
 			layer2.addElement(new Element(Texture("menuMapAU.png"),sf::Vector2f(margel,margeu), 0.f));
 			fill.setFillColor(sf::Color(130,130,130,255));
@@ -222,6 +277,7 @@ int GameStep::menu(){
 			fill.setFillColor(sf::Color(130,130,130,0));
 			fillcolor.setFillColor(sf::Color(96,64,115,0));
 			name.setString("");
+			playClic=true;
 		}
 
 		window->clear(sf::Color(red,22,22));
