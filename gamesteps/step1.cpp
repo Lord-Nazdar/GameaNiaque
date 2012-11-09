@@ -33,11 +33,13 @@ bool GameStep::step1(){
 
 	//Score display
 	sf::Font Arial;
-	Arial.loadFromFile("arial.ttf");
+	Arial.loadFromFile("pixelart.ttf");
 	sf::Text scoreText;
+	scoreText.setFont(Arial);
+	scoreText.setPosition(20,20);
 
 	//Création de l'entitée player et positionnement
-	player=new Player(Player::complex);
+	player=new Player(Player::helical);
 	player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
 
 	layer1.addElement(player->player);
@@ -287,7 +289,10 @@ bool GameStep::step1int2(){
 	layerManager.add(&layer2);
 
 	layer1.addElement(player->player); //Ajout de l'entitée player
-	layer2.addElement(new AnimatedElement(Texture("cellule.png"),sf::Vector2f((width-500)/2,-50), 0.f, 500, 1,0));
+
+	AnimatedElement *cell;
+	cell = new AnimatedElement(Texture("cellule.png"),sf::Vector2f((width-500)/2,-50), 0.f, 500, 1,0);
+	layer2.addElement(cell);
 
 	//var for ease
 	sf::Vector2f startPos = player->player->getPosition();
@@ -299,8 +304,10 @@ bool GameStep::step1int2(){
 
 	//Score display
 	sf::Font Arial;
-	Arial.loadFromFile("arial.ttf");
+	Arial.loadFromFile("pixelart.ttf");
 	sf::Text scoreText;
+	scoreText.setFont(Arial);
+	scoreText.setPosition(20,20);
 
 	while (window->isOpen())
 	{
@@ -322,9 +329,10 @@ bool GameStep::step1int2(){
 		//Update score render
 		scoreText.setString(intTostring(this->score));
 
-		player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));
-
-		std::cout << moveTo(frame+1,startPos.x,endPos.x,200) << ";" << moveTo(frame,startPos.y,endPos.y,200) << std::endl;
+		if(frame<200)
+			player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));
+		else if(frame>200 && frame<400)
+			cell->setScale(0.1,0.1);
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);

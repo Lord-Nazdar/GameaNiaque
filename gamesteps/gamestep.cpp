@@ -100,7 +100,7 @@ int GameStep::menu(){
 	layerManager.add(&layer1);
 	layerManager.add(&layer2);
 
-	sf::RectangleShape fill(sf::Vector2f(200, 40));
+	sf::RectangleShape fill(sf::Vector2f(300, 40));
 	fill.setFillColor(sf::Color(130,130,130,0));
 	sf::RectangleShape fillcolor(sf::Vector2f(30, 40));
 	fillcolor.setFillColor(sf::Color(96,64,115,0));
@@ -117,8 +117,9 @@ int GameStep::menu(){
 
 	//name display
 	sf::Font Arial;
-	Arial.loadFromFile("arial.ttf");
+	Arial.loadFromFile("pixelart.ttf");
 	sf::Text name;
+	name.setFont(Arial);
 	name.setCharacterSize(30);
 	name.setColor(sf::Color::Black);
 
@@ -154,7 +155,7 @@ int GameStep::menu(){
 			fillcolor.setFillColor(sf::Color(96,64,115,255));
 			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
 			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
-			name.setString("Crédits");
+			name.setString("Credits");
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
 		}
 		else if(mouse.getPosition().x>margel+200 && mouse.getPosition().x<margel+200+170 && mouse.getPosition().y>margeu+300 && mouse.getPosition().y<margeu+300+200 ){
@@ -187,7 +188,7 @@ int GameStep::menu(){
 			fillcolor.setFillColor(sf::Color(216,216,204,255));
 			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
 			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
-			name.setString("Générateur");
+			name.setString("Generateur");
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
 			if(mouse.isButtonPressed(sf::Mouse::Left))
 				return 5;

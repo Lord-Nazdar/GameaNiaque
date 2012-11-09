@@ -20,7 +20,7 @@ bool GameStep::generateur(){
 
 	//name display
 	sf::Font Arial;
-	Arial.loadFromFile("arial.ttf");
+	Arial.loadFromFile("pixelart.ttf");
 	sf::Text name;
 	name.setCharacterSize(40);
 	name.setColor(sf::Color::White);
