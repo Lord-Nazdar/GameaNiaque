@@ -9,3 +9,5 @@
 /*.dll
 /GameaNiaque.cbp
 /GameaNiaque.depend
+/*.Debug
+/*.Release
