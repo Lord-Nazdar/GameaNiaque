@@ -20,6 +20,7 @@ int main()
 	//Gamestep menu
 	switch(gamestep.menu()){
 		case 1:
+			gamestep.prestep1();
 			gamestep.step1();
 			gamestep.step1int2();
 		case 2:

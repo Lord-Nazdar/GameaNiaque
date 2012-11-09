@@ -24,6 +24,7 @@ public:
 	void instruction();
 	bool generateur();
 	bool logo();
+	bool prestep1();
 	bool step1();
 	bool step1int2();
 	bool step2();

@@ -1,5 +1,126 @@
 #include "../gamestep.h"
 
+bool GameStep::prestep1(){
+	//return true;
+
+
+	sf::RectangleShape fade1(sf::Vector2f(width, height));
+	fade1.setPosition(sf::Vector2f(0,0));
+	fade1.setFillColor(sf::Color(0,0,0,255));
+	//Layer
+	LayerManager layerManager;
+	//Layer layer1(1,0);	//	Player cell layer
+	Layer layer2(1,0);	// logo
+
+	//layerManager.add(&layer1);
+	layerManager.add(&layer2);
+
+	/*player=new Player(Player::helical);
+	player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
+	layer1.addElement(player->player);*/
+
+	Element *efrei;
+	efrei = new Element(Texture("efreilogo.png"),sf::Vector2f((width-346)/2,-332), 0.f);
+	efrei->setPosition(((width/2)-400)+30,-150);
+	efrei->setScale(0.4,0.4);
+	layer2.addElement(efrei);
+	Element *game;
+	game = new Element(Texture("gamelogo.png"),sf::Vector2f((width-346)/2,-119), 0.f);
+	game->setPosition((width/2)+30,-100);
+	game->setScale(0.5,0.5);
+	layer2.addElement(game);
+
+	unsigned int frame = 0;
+	int red = 120;
+	bool incColor=false;
+
+	//text display
+	sf::Font Arial;
+	Arial.loadFromFile("pixelart.ttf");
+
+	//Text part 1 : nom
+	sf::Text avec;
+	avec.setFont(Arial);
+	avec.setColor(sf::Color::Black);
+	avec.setPosition((width/2)-400,-150);
+	avec.setString("Une realisation de");
+	sf::Text nom;
+	nom.setFont(Arial);
+	nom.setColor(sf::Color::Black);
+	nom.setPosition(((width/2)-400)+30,-100);
+	nom.setString("Pierre Boyer \n Thomas Poulet");
+
+	//Text part 2 : concour
+	sf::Text cadre;
+	cadre.setFont(Arial);
+	cadre.setColor(sf::Color::Black);
+	cadre.setPosition((width/2),-150);
+	cadre.setString("Dans le cadre de");
+
+	//Text part 3 : efrei
+	sf::Text sout;
+	sout.setFont(Arial);
+	sout.setColor(sf::Color::Black);
+	sout.setPosition((width/2)-400,-200);
+	sout.setString("Avec le soutient de");
+
+	//Text part 4 : acte
+	sf::Text acte;
+	acte.setFont(Arial);
+	acte.setColor(sf::Color(0,0,0,0));
+	acte.setPosition(width/2-400,height/2-200);
+	acte.setString("Acte 1\n     Propagation");
+
+	while (window->isOpen() && frame<1000)
+	{
+		stepEvent();
+
+		if(frame%4==0){
+			if(!incColor){
+				red--;
+				if(red<90)incColor=true;
+			}
+			else{
+				red++;
+				if(red>120)incColor=false;
+			}
+		}
+		if(frame<40){
+			fade1.setFillColor(sf::Color(0,0,0,255-frame*5));
+		}
+
+		if(frame>20){
+			avec.move(0,moveTo(0,-20,height+100,400));
+			nom.move(0,moveTo(0,-20,height+100,400));
+		}
+		if(frame>200){
+			cadre.move(0,moveTo(0,-20,height+100,400));
+			game->move(0,moveTo(0,-20,height+100,400));
+		}
+		if(frame>400){
+			sout.move(0,moveTo(0,-20,height+100,400));
+			efrei->move(0,moveTo(0,-20,height+100,400));
+		}
+		if(frame>850 && frame <950){
+			acte.setColor(sf::Color(0,0,0,(frame-850)*2.5));
+		}
+
+
+		window->clear(sf::Color(red,22,22));
+		layerManager.update(frame);
+		layerManager.draw(*window);
+		window->draw(nom);
+		window->draw(cadre);
+		window->draw(avec);
+		window->draw(sout);
+		window->draw(acte);
+		window->draw(fade1);
+		window->display();
+
+		frame++;
+	}
+}
+
 bool GameStep::step1(){
 	//return true;
 
