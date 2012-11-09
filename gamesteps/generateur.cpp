@@ -30,7 +30,6 @@ bool GameStep::generateur(){
 	std::string m_saisie="";
 
 	unsigned int frame = 0;
-	int red = 120;
 	bool incColor=false;
 
 	sf::Mouse mouse;

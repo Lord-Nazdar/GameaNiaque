@@ -29,6 +29,9 @@ void GameStep::init(){
 
 	//Création du player
 	player=new Player;
+
+	//Initialise le rouge pour plus de cohérence
+	red=120;
 }
 
 bool GameStep::logo(){
@@ -124,7 +127,6 @@ int GameStep::menu(){
 	name.setColor(sf::Color::Black);
 
 	unsigned int frame = 0;
-	int red = 120;
 	bool incColor=false;
 
 	while (window->isOpen())

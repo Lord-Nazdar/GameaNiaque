@@ -31,7 +31,7 @@ bool GameStep::prestep1(){
 	layer2.addElement(game);
 
 	unsigned int frame = 0;
-	int red = 120;
+
 	bool incColor=false;
 
 	//text display
@@ -71,7 +71,7 @@ bool GameStep::prestep1(){
 	acte.setPosition(width/2-400,height/2-200);
 	acte.setString("Acte 1\n     Propagation");
 
-	while (window->isOpen() && frame<1000)
+	while (window->isOpen() && frame<700)
 	{
 		stepEvent();
 
@@ -90,19 +90,19 @@ bool GameStep::prestep1(){
 		}
 
 		if(frame>20){
-			avec.move(0,moveTo(0,-20,height+100,400));
-			nom.move(0,moveTo(0,-20,height+100,400));
+			avec.move(0,moveTo(0,-20,height+100,200));
+			nom.move(0,moveTo(0,-20,height+100,200));
+		}
+		if(frame>100){
+			cadre.move(0,moveTo(0,-20,height+100,200));
+			game->move(0,moveTo(0,-20,height+100,200));
 		}
 		if(frame>200){
-			cadre.move(0,moveTo(0,-20,height+100,400));
-			game->move(0,moveTo(0,-20,height+100,400));
+			sout.move(0,moveTo(0,-20,height+100,200));
+			efrei->move(0,moveTo(0,-20,height+100,200));
 		}
-		if(frame>400){
-			sout.move(0,moveTo(0,-20,height+100,400));
-			efrei->move(0,moveTo(0,-20,height+100,400));
-		}
-		if(frame>850 && frame <950){
-			acte.setColor(sf::Color(0,0,0,(frame-850)*2.5));
+		if(frame>450 && frame <550){
+			acte.setColor(sf::Color(0,0,0,(frame-450)*2.5));
 		}
 
 
@@ -148,7 +148,7 @@ bool GameStep::step1(){
 	layerManager.add(&layer5);
 	layerManager.add(&layer1);
 	unsigned int frame=0;
-	int red=120;
+
 	bool incColor=false;
 	bool fireactiv=false; //trigger when fire press
 
@@ -420,7 +420,7 @@ bool GameStep::step1int2(){
 	sf::Vector2f endPos(width/2,0);
 
 	unsigned int frame = 0;
-	int red = 120;
+
 	bool incColor=false;
 
 	//Score display

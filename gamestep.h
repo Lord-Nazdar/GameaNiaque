@@ -41,6 +41,7 @@ private:
 	bool mouseButtonDown;
 	int score;
 	Player *player;
+	int red;
 };
 
 float moveTo (int frame, float posFrom, float posTo, float duration);
