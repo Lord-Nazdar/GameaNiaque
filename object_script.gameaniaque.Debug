@@ -1,0 +1,17 @@
+INPUT(
+./debug\main.o
+./debug\layermanager.o
+./debug\layer.o
+./debug\player.o
+./debug\element.o
+./debug\movableelement.o
+./debug\textures.o
+./debug\animatedelement.o
+./debug\upgrademanager.o
+./debug\step4.o
+./debug\step3.o
+./debug\step2.o
+./debug\step1.o
+./debug\gamestep.o
+./debug\generateur.o
+);

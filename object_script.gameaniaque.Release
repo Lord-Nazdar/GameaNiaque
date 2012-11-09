@@ -1,0 +1,17 @@
+INPUT(
+./release\main.o
+./release\layermanager.o
+./release\layer.o
+./release\player.o
+./release\element.o
+./release\movableelement.o
+./release\textures.o
+./release\animatedelement.o
+./release\upgrademanager.o
+./release\step4.o
+./release\step3.o
+./release\step2.o
+./release\step1.o
+./release\gamestep.o
+./release\generateur.o
+);
