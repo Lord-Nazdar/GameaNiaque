@@ -362,7 +362,7 @@ bool GameStep::step1(){
 			this->score=0;
 
 		//Update score render
-		scoreText.setString(intTostring(this->score));
+		scoreText.setString(toString(this->score));
 
 
 		window->clear(sf::Color(red,22,22));
@@ -412,7 +412,7 @@ bool GameStep::step1(){
 bool GameStep::step1int2(){
 	//return true;
 
-	//Layer	
+	//Layer
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Player cell layer
 	Layer layer2(1,0);	// Big Cell
@@ -464,7 +464,7 @@ bool GameStep::step1int2(){
 
 
 		//Update score render
-		scoreText.setString(intTostring(this->score));
+		scoreText.setString(toString(this->score));
 
 		if(frame<200)
 			player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));

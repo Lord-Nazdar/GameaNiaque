@@ -37,7 +37,7 @@ void HighScoreElement::draw(sf::RenderWindow &window){
 	scoreR.setCharacterSize(40);
 	scoreR.setColor(sf::Color(100,100,100));
 	scoreR.setPosition(sf::Vector2f(((width/2)+260),(((height/2)-520)+pos*130)+25));
-	scoreR.setString(intTostring(score));
+	scoreR.setString(toString(score));
 	window.draw(scoreR);
 
 	sf::Text tempsR;
