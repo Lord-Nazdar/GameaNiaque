@@ -147,7 +147,7 @@ int check=1;
 
 
 		//Update score render
-		scoreText.setString(toString(score));
+		scoreText.setString(intTostring(this->score));
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);

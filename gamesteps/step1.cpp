@@ -47,9 +47,9 @@ bool GameStep::prestep1(){
 	nom.setFont(Arial);
 	nom.setColor(sf::Color(120,120,120));
 	nom.setPosition(((width/2)-400)+30,-100);
-	nom.setString("Thomas Poulet \nPierre Boyer");
+	nom.setString("Pierre Boyer \n Thomas Poulet");
 
-	//Text part 2 : concours
+	//Text part 2 : concour
 	sf::Text cadre;
 	cadre.setFont(Arial);
 	cadre.setColor(sf::Color(100,100,100));
@@ -221,7 +221,7 @@ bool GameStep::step1(){
 			laser.push_back(new AnimatedElement(Texture("laser.png"),player->player->getPosition(), 0.f, 64, 2,0));
 			layer2.addElement(laser[laser.size()-1]);
 			fireactiv=true;
-			score--;
+			this->score--;
 			tirMusic.play();
 		}
 		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -325,7 +325,7 @@ bool GameStep::step1(){
 		//spawn enemies
 		if(frame%60==0){
 			int r = 0 + (rand() % ((width-128) - 0));
-			enemies.push_back(new AnimatedElement(Texture("grid.png"),sf::Vector2f(r,0), 0.f, 64, 1,0));
+			enemies.push_back(new AnimatedElement(Texture("grid.png"),sf::Vector2f(r,0), 0.f, 64, 1,24));
 			layer3.addElement(enemies[enemies.size()-1]);
 		}
 		//spawn bonuses
@@ -362,7 +362,7 @@ bool GameStep::step1(){
 			this->score=0;
 
 		//Update score render
-		scoreText.setString(toString(this->score));
+		scoreText.setString(intTostring(this->score));
 
 
 		window->clear(sf::Color(red,22,22));
@@ -412,7 +412,7 @@ bool GameStep::step1(){
 bool GameStep::step1int2(){
 	//return true;
 
-	//Layer
+	//Layer	
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Player cell layer
 	Layer layer2(1,0);	// Big Cell
@@ -464,7 +464,7 @@ bool GameStep::step1int2(){
 
 
 		//Update score render
-		scoreText.setString(toString(score));
+		scoreText.setString(intTostring(this->score));
 
 		if(frame<200)
 			player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));

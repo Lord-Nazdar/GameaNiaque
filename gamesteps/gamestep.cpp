@@ -20,7 +20,7 @@ void GameStep::init(){
 	srand ( time(NULL) );
 
 	//Initialisation du score
-	this->score=0;
+	this->score=0 ;
 
 	//Création du player
 	player=new Player;
@@ -92,12 +92,6 @@ bool GameStep::logo(){
 		frame++;
 	}
 }
-
-bool GameStep::generateur() // Obligé de mettre pour le linker puisque j'ai trouvé aucune autre définition de generateur() ailleurs dans le code.
-{
-    return true;
-}
-
 
 int GameStep::menu(){
 
@@ -198,8 +192,10 @@ int GameStep::menu(){
 			fillcolor.setFillColor(sf::Color(226,73,17,255));
 			fill.setPosition(mouse.getPosition().x,mouse.getPosition().y);
 			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
-			name.setString("Web");
+			name.setString("High Score");
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+			if(mouse.isButtonPressed(sf::Mouse::Left))
+				return 6;
 		}
 		else if(mouse.getPosition().x>margel+425 && mouse.getPosition().x<margel+425+205 && mouse.getPosition().y>margeu+75 && mouse.getPosition().y<margeu+75+167 ){
 			if(playClic!=3){
@@ -350,8 +346,8 @@ void GameStep::stepEvent(){
 	{
 		if (event.type == sf::Event::Closed)
 			window->close();
-		/*if (event.type == sf::Event::LostFocus)
-			pauseMenu();*/
+		if (event.type == sf::Event::LostFocus)
+			pauseMenu();
 		if (event.type == sf::Event::MouseButtonPressed){
 			if (event.mouseButton.button == sf::Mouse::Left)
 				mouseButtonDown=true;
@@ -414,4 +410,3 @@ void GameStep::instruction(){
 		window->display();
 	}
 }
-

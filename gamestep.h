@@ -13,6 +13,7 @@
 #include "layer.h"
 #include "layermanager.h"
 #include "player.h"
+#include "highscoreelement.h"
 
 //#include "movableelement.h"
 
@@ -34,6 +35,7 @@ public:
 	bool step4();
 	void stepEvent();
 	int step3Mouse(std::vector<Element*> element);
+	void stepScore();
 
 private:
 	sf::RenderWindow *window;
@@ -47,7 +49,6 @@ private:
 };
 
 float moveTo (int frame, float posFrom, float posTo, float duration);
-
 template <typename T>
 std::string toString(T nb){
 	std::ostringstream oss;
