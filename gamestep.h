@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include "textures.h"
+#include "fonts.h"
 #include "layer.h"
 #include "layermanager.h"
 #include "player.h"
@@ -46,6 +47,12 @@ private:
 };
 
 float moveTo (int frame, float posFrom, float posTo, float duration);
-std::string intTostring(int nb);
+
+template <typename T>
+std::string toString(T nb){
+	std::ostringstream oss;
+	oss << nb;
+	return oss.str();
+}
 
 #endif // GAMESTEP_H

@@ -36,8 +36,7 @@ int check=1;
 	layer2.addElement(cell);
 
 	//text display
-	sf::Font Arial;
-	Arial.loadFromFile("pixelart.ttf");
+	sf::Font Arial = Font("pixelart.ttf");
 
 	//Tableau de l'adn solution et player
 	int adnSol[15];
@@ -148,7 +147,7 @@ int check=1;
 
 
 		//Update score render
-		scoreText.setString(intTostring(score));
+		scoreText.setString(toString(score));
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);

@@ -35,8 +35,7 @@ bool GameStep::prestep1(){
 	bool incColor=false;
 
 	//text display
-	sf::Font Arial;
-	Arial.loadFromFile("pixelart.ttf");
+	sf::Font Arial = Font("pixelart.ttf");
 
 	//Text part 1 : nom
 	sf::Text avec;
@@ -48,9 +47,9 @@ bool GameStep::prestep1(){
 	nom.setFont(Arial);
 	nom.setColor(sf::Color(120,120,120));
 	nom.setPosition(((width/2)-400)+30,-100);
-	nom.setString("Pierre Boyer \n Thomas Poulet");
+	nom.setString("Thomas Poulet \nPierre Boyer");
 
-	//Text part 2 : concour
+	//Text part 2 : concours
 	sf::Text cadre;
 	cadre.setFont(Arial);
 	cadre.setColor(sf::Color(100,100,100));
@@ -154,8 +153,7 @@ bool GameStep::step1(){
 	bool fireactiv=false; //trigger when fire press
 
 	//Score display
-	sf::Font Arial;
-	Arial.loadFromFile("pixelart.ttf");
+	sf::Font Arial = Font("pixelart.ttf");
 	sf::Text scoreText;
 	scoreText.setFont(Arial);
 	scoreText.setPosition(20,20);
@@ -364,7 +362,7 @@ bool GameStep::step1(){
 			this->score=0;
 
 		//Update score render
-		scoreText.setString(intTostring(this->score));
+		scoreText.setString(toString(this->score));
 
 
 		window->clear(sf::Color(red,22,22));
@@ -414,7 +412,7 @@ bool GameStep::step1(){
 bool GameStep::step1int2(){
 	//return true;
 
-	//Layer	
+	//Layer
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Player cell layer
 	Layer layer2(1,0);	// Big Cell
@@ -432,8 +430,7 @@ bool GameStep::step1int2(){
 	sf::Vector2f endPos(width/2,(height/2)-50);
 
 	//text display
-	sf::Font Arial;
-	Arial.loadFromFile("pixelart.ttf");
+	sf::Font Arial = Font("pixelart.ttf");
 	//Text part 4 : acte
 	sf::Text acte;
 	acte.setFont(Arial);
@@ -467,7 +464,7 @@ bool GameStep::step1int2(){
 
 
 		//Update score render
-		scoreText.setString(intTostring(score));
+		scoreText.setString(toString(score));
 
 		if(frame<200)
 			player->player->move(sf::Vector2f(moveTo(frame+1,startPos.x,endPos.x,200),moveTo(frame,startPos.y,endPos.y,200)));

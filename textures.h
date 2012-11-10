@@ -1,7 +1,7 @@
 #ifndef TEXTURES_H
 #define TEXTURES_H
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <map>
 #include <string>

@@ -1,5 +1,65 @@
 #include "../gamestep.h"
 
+
+class Cell : public Element
+{
+    typedef enum {BIG, MED, SMALL} Size;
+
+    public:
+        Cell(sf::Vector2f position, Size type, int startValue = 0) : Element(Texture("cellule.png"), position, 0.f)
+        {
+            value = startValue;
+            setOrigin(250, 250);
+
+            radius = (type==BIG ? 15 : (type==MED ? 10 : 5));
+
+            //setSize(sf::Vector2f(radius,radius));
+            genRate = (type==BIG ? 3 : (type==MED ? 2 : 1));
+
+            valueText.setFont(Font("pixelart.ttf"));
+            valueText.setOrigin(valueText.getLocalBounds().width/2.f, valueText.getLocalBounds().height/2.f);
+            valueText.setString("99");
+            valueText.setColor(sf::Color::White);
+            update(0);
+
+        }
+
+        void update(int frame)
+        {
+            if(value > 0)
+            {
+                value += genRate;
+            }
+            if(value < 0)
+            {
+                value -= genRate;
+            }
+
+            valueText.setString(toString(value));
+        }
+
+        void draw(sf::RenderWindow &window)
+        {
+            //if(value > 0)
+
+        }
+
+        bool isInside(sf::Vector2f coord)
+        {
+            sf::Vector2f delta = coord - getPosition();
+            float distance = sqrt(delta.x*delta.x + delta.y*delta.y);
+            return distance < radius;
+        }
+
+    private:
+        int value;
+        int genRate;
+        float radius;
+        sf::Text valueText;
+
+};
+
+
 bool GameStep::step3(){
 
 	int red=120;

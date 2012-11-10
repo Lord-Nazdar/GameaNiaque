@@ -1,10 +1,5 @@
 #include "../gamestep.h"
 
-std::string intTostring(int nb){
-	std::ostringstream oss;
-	oss << nb;
-	return oss.str();
-}
 
 float moveTo (int frame, float posFrom, float posTo, float duration){
 	return (posTo-posFrom)/(duration*1.0);
@@ -98,6 +93,12 @@ bool GameStep::logo(){
 	}
 }
 
+bool GameStep::generateur() // Obligé de mettre pour le linker puisque j'ai trouvé aucune autre définition de generateur() ailleurs dans le code.
+{
+    return true;
+}
+
+
 int GameStep::menu(){
 
 	//Music maestro
@@ -132,8 +133,7 @@ int GameStep::menu(){
 	layer1.addElement(new Element(Texture("menuMapC.png"),sf::Vector2f(margel,margeu), 0.f));
 
 	//name display
-	sf::Font Arial;
-	Arial.loadFromFile("pixelart.ttf");
+	sf::Font Arial = Font("pixelart.ttf");
 	sf::Text name;
 	name.setFont(Arial);
 	name.setCharacterSize(30);

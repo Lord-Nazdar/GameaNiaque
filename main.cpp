@@ -20,6 +20,13 @@ int main()
 	//Gamestep Logo apparences
 	gamestep.logo();
 
+    gamestep.step3(); // Temporaire.
+    //
+    // Y a une segfault juste après le menu depuis les commits #48d7bc3601ffdf6535b367f116d4d3f00ebe51cb
+    // ou #fddb8b2aaf714914dd15dd7081ecfe2d4f43e867. Le debugger amène sur des fonctions DirectSound, donc
+    // c'est un de ses deux là. En attendant je met mon gamestep là pour pouvoir y accéder à l'execution.
+    //
+
 	//Gamestep menu
 	switch(gamestep.menu()){
 		case 1:

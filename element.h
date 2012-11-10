@@ -1,7 +1,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <string>
 
 class Element : public sf::Transformable
