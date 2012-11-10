@@ -9,7 +9,6 @@
 #include <sstream>
 
 #include "textures.h"
-#include "music.h"
 #include "layer.h"
 #include "layermanager.h"
 #include "player.h"

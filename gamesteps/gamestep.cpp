@@ -273,6 +273,7 @@ int GameStep::menu(){
 				window->close();
 		}
 		else{
+			playClic=0;
 			layer2.clear();
 			fill.setFillColor(sf::Color(130,130,130,0));
 			fillcolor.setFillColor(sf::Color(96,64,115,0));

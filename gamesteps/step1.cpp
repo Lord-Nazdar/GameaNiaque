@@ -41,32 +41,33 @@ bool GameStep::prestep1(){
 	//Text part 1 : nom
 	sf::Text avec;
 	avec.setFont(Arial);
-	avec.setColor(sf::Color::Black);
+	avec.setColor(sf::Color(100,100,100));
 	avec.setPosition((width/2)-400,-150);
 	avec.setString("Une realisation de");
 	sf::Text nom;
 	nom.setFont(Arial);
-	nom.setColor(sf::Color::Black);
+	nom.setColor(sf::Color(120,120,120));
 	nom.setPosition(((width/2)-400)+30,-100);
 	nom.setString("Pierre Boyer \n Thomas Poulet");
 
 	//Text part 2 : concour
 	sf::Text cadre;
 	cadre.setFont(Arial);
-	cadre.setColor(sf::Color::Black);
+	cadre.setColor(sf::Color(100,100,100));
 	cadre.setPosition((width/2),-150);
 	cadre.setString("Dans le cadre de");
 
 	//Text part 3 : efrei
 	sf::Text sout;
 	sout.setFont(Arial);
-	sout.setColor(sf::Color::Black);
+	sout.setColor(sf::Color(100,100,100));
 	sout.setPosition((width/2)-400,-200);
 	sout.setString("Avec le soutient de");
 
 	//Text part 4 : acte
 	sf::Text acte;
 	acte.setFont(Arial);
+	acte.setScale(1.5,1.5);
 	acte.setColor(sf::Color(0,0,0,0));
 	acte.setPosition(width/2-400,height/2-200);
 	acte.setString("Acte 1\n     Contamination");
@@ -165,6 +166,14 @@ bool GameStep::step1(){
 
 	layer1.addElement(player->player);
 
+	//Sound effets
+	sf::Music exploMusic;
+	exploMusic.openFromFile("music/explo.wav");
+	exploMusic.setVolume(10);
+	sf::Music tirMusic;
+	tirMusic.openFromFile("music/tir.wav");
+	tirMusic.setVolume(10);
+
 	//Vector de laser et de enemies
 	std::vector<AnimatedElement*> laser;
 	std::vector<AnimatedElement*> enemies;
@@ -215,6 +224,7 @@ bool GameStep::step1(){
 			layer2.addElement(laser[laser.size()-1]);
 			fireactiv=true;
 			score--;
+			tirMusic.play();
 		}
 		if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 			fireactiv=false;
@@ -251,6 +261,8 @@ bool GameStep::step1(){
 
 						//inc score
 						this->score+=10;
+
+						exploMusic.play();
 
 					}
 
@@ -425,6 +437,7 @@ bool GameStep::step1int2(){
 	//Text part 4 : acte
 	sf::Text acte;
 	acte.setFont(Arial);
+	acte.setScale(1.5,1.5);
 	acte.setColor(sf::Color(0,0,0,0));
 	acte.setPosition(width/2-400,height/2-200);
 	acte.setString("Acte 2\n     Reproduction");
