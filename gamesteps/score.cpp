@@ -4,17 +4,20 @@
 
 using namespace std;
 
-void GameStep::stepScore(){
+bool GameStep::stepScore(){
 	//Texte
-	sf::Font Arial;
-	Arial.loadFromFile("pixelart.ttf");
+	sf::Font Arial = Font("pixelart.ttf");
 
 	sf::Text topR;
 	topR.setFont(Arial);
 	topR.setCharacterSize(40);
 	topR.setColor(sf::Color(100,100,100));
-	topR.setPosition(sf::Vector2f(((width/2)-180),(((height/2)-320))));
+	topR.setPosition(sf::Vector2f((width/2)-180,(height/2)-320));
 	topR.setString("High Score");
+
+	sf::RectangleShape top(sf::Vector2f(width, 45));
+	top.setFillColor(sf::Color(0,0,0,150));
+	top.setPosition(sf::Vector2f(0,(height/2)-320));
 
 	//Fichier des HS
 	ifstream fichier("score.hs", ios::in);
@@ -39,6 +42,11 @@ void GameStep::stepScore(){
 	{
 		stepEvent();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+			if(!pauseMenu()){
+				return false;
+			}
+		}
 
 		if(frame%4==0){
 			if(!incColor){
@@ -55,6 +63,7 @@ void GameStep::stepScore(){
 		high2.draw(*window);
 		high3.draw(*window);
 		high4.draw(*window);
+		window->draw(top);
 		window->draw(topR);
 		window->display();
 		frame++;

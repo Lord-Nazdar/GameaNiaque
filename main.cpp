@@ -49,6 +49,9 @@ int main()
 			case 6:
 				gamestep.stepScore();
 				break;
+			case 7:
+				gamestep.credit();
+				break;
 		}
 	}while(returnMenu!=10);
 

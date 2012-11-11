@@ -178,6 +178,8 @@ int GameStep::menu(){
 			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
 			name.setString("Credits");
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+			if(mouse.isButtonPressed(sf::Mouse::Left))
+				return 7;
 		}
 		else if(mouse.getPosition().x>margel+200 && mouse.getPosition().x<margel+200+170 && mouse.getPosition().y>margeu+300 && mouse.getPosition().y<margeu+300+200 ){
 			if(playClic!=2){
@@ -300,7 +302,7 @@ bool GameStep::pauseMenu(){
 	bool incColor=false;
 
 	sf::RectangleShape fill(sf::Vector2f(width, 35));
-	fill.setFillColor(sf::Color(50,50,50,0));
+	fill.setFillColor(sf::Color(0,0,0,0));
 
 	//text display
 	sf::Font Arial = Font("pixelart.ttf");
@@ -333,20 +335,20 @@ bool GameStep::pauseMenu(){
 
 		if(mouse.getPosition().y>(height/2)+60 && mouse.getPosition().y<(height/2)+60+30 ){
 			fill.setPosition(sf::Vector2f(0,(height/2)+60));
-			fill.setFillColor(sf::Color(50,50,50,150));
+			fill.setFillColor(sf::Color(0,0,0,50));
 			if(mouse.isButtonPressed(sf::Mouse::Left)&&pressed==0)
 				pressed=1;
 
 		}
 		else if(mouse.getPosition().y>(height/2)-60 && mouse.getPosition().y<(height/2)-60+30 ){
 			fill.setPosition(sf::Vector2f(0,(height/2)-60));
-			fill.setFillColor(sf::Color(50,50,50,150));
+			fill.setFillColor(sf::Color(0,0,0,50));
 			if(mouse.isButtonPressed(sf::Mouse::Left)&&pressed==0)
 				pressed=2;
 		}
 		else if(mouse.getPosition().y>(height/2) && mouse.getPosition().y<(height/2)+30 ){
 			fill.setPosition(sf::Vector2f(0,(height/2)));
-			fill.setFillColor(sf::Color(50,50,50,150));
+			fill.setFillColor(sf::Color(0,0,0,50));
 			if(mouse.isButtonPressed(sf::Mouse::Left)&&pressed==0)
 				pressed=3;
 		}

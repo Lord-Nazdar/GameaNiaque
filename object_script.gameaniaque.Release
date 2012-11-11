@@ -17,4 +17,5 @@ INPUT(
 ./release\highscoreelement.o
 ./release\score.o
 ./release\fonts.o
+./release\credit.o
 );
