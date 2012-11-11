@@ -75,6 +75,12 @@ bool GameStep::prestep1(){
 	{
 		stepEvent();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+			if(!pauseMenu()){
+				return false;
+			}
+		}
+
 		if(frame%4==0){
 			if(!incColor){
 				red--;
@@ -119,6 +125,8 @@ bool GameStep::prestep1(){
 
 		frame++;
 	}
+
+	return true;
 }
 
 bool GameStep::step1(){
@@ -187,6 +195,12 @@ bool GameStep::step1(){
 	while (window->isOpen() && (this->score<1000 || clock1.getElapsedTime().asSeconds()<120 ) && trollpart1)
 	{
 		stepEvent();
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+			if(!pauseMenu()){
+				return false;
+			}
+		}
 
 		if(frame%4==0){
 			if(!incColor){
@@ -407,6 +421,8 @@ bool GameStep::step1(){
 		window->display();
 		frame++;
 	}
+
+	return true;
 }
 
 bool GameStep::step1int2(){
@@ -450,6 +466,12 @@ bool GameStep::step1int2(){
 	{
 		stepEvent();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+			if(!pauseMenu()){
+				return false;
+			}
+		}
+
 		if(frame%4==0){
 			if(!incColor){
 				red--;
@@ -488,4 +510,6 @@ bool GameStep::step1int2(){
 
 		frame++;
 	}
+
+	return true;
 }

@@ -23,7 +23,7 @@ public:
 	GameStep();
 	void init();
 	int menu();
-	void pauseMenu();
+	bool pauseMenu();
 	void instruction();
 	bool generateur();
 	bool logo();
@@ -34,6 +34,7 @@ public:
 	bool step3();
 	bool step4();
 	void stepEvent();
+	int step3Mouse(std::vector<Element*> element);
 	void stepScore();
 
 private:

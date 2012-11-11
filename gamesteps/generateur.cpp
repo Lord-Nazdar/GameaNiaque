@@ -39,6 +39,12 @@ bool GameStep::generateur(){
 	{
 		stepEvent();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+			if(!pauseMenu()){
+				return false;
+			}
+		}
+
 		if(mouse.getPosition().x>140 && mouse.getPosition().x<width-160 && mouse.getPosition().y>45 && mouse.getPosition().y<+45+50){
 			if (sf::Event::TextEntered){
 				if ((textEvent.unicode > 30 &&(textEvent.unicode < 127 || textEvent.unicode > 159))){
@@ -66,4 +72,6 @@ bool GameStep::generateur(){
 		window->display();
 		frame++;
 	}
+
+	return true;
 }

@@ -85,6 +85,12 @@ int check=1;
 	{
 		stepEvent();
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+			if(!pauseMenu()){
+				return false;
+			}
+		}
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)&&release){
 			cran--;
 			if(cran<0){
@@ -169,4 +175,6 @@ int check=1;
 
 		frame++;
 	}
+
+	return true;
 }

@@ -14,4 +14,7 @@ INPUT(
 ./debug\step1.o
 ./debug\gamestep.o
 ./debug\generateur.o
+./debug\highscoreelement.o
+./debug\score.o
+./debug\fonts.o
 );

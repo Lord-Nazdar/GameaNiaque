@@ -14,4 +14,7 @@ INPUT(
 ./release\step1.o
 ./release\gamestep.o
 ./release\generateur.o
+./release\highscoreelement.o
+./release\score.o
+./release\fonts.o
 );
