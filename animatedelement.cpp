@@ -19,12 +19,6 @@ AnimatedElement::AnimatedElement(sf::Texture& pTex, sf::Vector2f pPos = sf::Vect
 	setFrame(0);
 }
 
-void AnimatedElement::draw(sf::RenderWindow &window)
-{
-	sprite.setPosition(getPosition());
-	sprite.setRotation(getRotation());
-	window.draw(sprite);
-}
 
 void AnimatedElement::update(int frame)
 {
@@ -33,6 +27,11 @@ void AnimatedElement::update(int frame)
 		setFrame(frameIndex);
 		frameIndex++;
 	}
+}
+
+void AnimatedElement::draw(sf::RenderWindow& window)
+{
+	Element::draw(window);
 }
 
 void AnimatedElement::setFrame(int frame)

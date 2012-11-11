@@ -8,7 +8,7 @@ class Element : public sf::Transformable
 {
 public:
 	Element();
-    Element(sf::Texture& pTex, sf::Vector2f pPos, float pOrientation);
+    Element(sf::Texture& pTex, sf::Vector2f pPos = sf::Vector2f(0, 0), float pDir = 0.f);
 	Element(sf::Sprite& pSprite);
 
 

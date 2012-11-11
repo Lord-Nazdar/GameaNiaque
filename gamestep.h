@@ -34,7 +34,6 @@ public:
 	bool step3();
 	bool step4();
 	void stepEvent();
-	int step3Mouse(std::vector<Element*> element);
 	void stepScore();
 
 private:
