@@ -34,6 +34,7 @@ int main()
 		returnMenu=gamestep.menu();
 		switch(returnMenu){
 			case 1:
+				gamestep.generateur();
 				if(case1(&gamestep)){
 					if(case2(&gamestep)){
 						if(gamestep.step3()){

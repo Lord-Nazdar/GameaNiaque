@@ -122,7 +122,6 @@ bool GameStep::instruction(){
 	talentexplR.setString(" L'arbre des talents\nvous permet d'obtenir\ndes bonus exclusifs,\nvous autorisant au choix\nde disposer d'avantages\npour les differentes\netapes,ou de bonus en fin\nde partie vous\npermettant de faire\nencore plus de victimes.\n\n Vous disposez de 7\npalliers, ils se\ndeverouillent par\ntranche de 1000 points.\n\n A chaque tranche\nvous avez le choix entre\nun bonus immediat et\nun bonus de fin de partie.\n Chaque partie est de\nce fait unique !\n\n Vous devez donc\nfaire le bon choix\nau bon moment.\n\n L'avenir de l'humanite\nest entre vos mains.");
 
 
-
 	unsigned int frame = 0;
 	bool incColor=false;
 

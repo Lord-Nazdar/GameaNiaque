@@ -45,3 +45,23 @@ float Player::getVelocity()
 {
 	return velocity;
 }
+
+void Player::setStyle(int pStyle){
+	style=((Style)pStyle);
+	sf::Vector2f pos=player->getPosition();
+	switch(style){
+	case 0:
+		player=new AnimatedElement(Texture("grid.png"), pos, 0.f, 64, 1, 0);
+		break;
+	case 1:
+		player=new AnimatedElement(Texture("grid.png"), pos, 0.f, 64, 1, 8);
+		break;
+	case 2:
+		player=new AnimatedElement(Texture("grid.png"), pos, 0.f, 64, 2, 16);
+		break;
+	}
+}
+
+int Player::getStyle(){
+	return (int)style;
+}

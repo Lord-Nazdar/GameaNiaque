@@ -15,9 +15,9 @@ bool GameStep::prestep1(){
 	//layerManager.add(&layer1);
 	layerManager.add(&layer2);
 
-	/*player=new Player(Player::helical);
-	player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
-	layer1.addElement(player->player);*/
+	//player=new Player(Player::helical);
+	//player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
+//	layer1.addElement(player->player);
 
 	Element *efrei;
 	efrei = new Element(Texture("efreilogo.png"),sf::Vector2f((width-346)/2,-332), 0.f);
@@ -167,7 +167,7 @@ bool GameStep::step1(){
 	scoreText.setPosition(20,20);
 
 	//Création de l'entitée player et positionnement
-	player=new Player(Player::helical);
+	//player=new Player(Player::helical);
 	player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
 
 	layer1.addElement(player->player);
@@ -215,16 +215,16 @@ bool GameStep::step1(){
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
 			if(player->player->getPosition().y>height/2)
-				player->player->move(sf::Vector2f(0,-player->getVelocity()));}
+				player->player->move(sf::Vector2f(0,-player->velocity));}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
 			if(player->player->getPosition().y<height-96)
-				player->player->move(sf::Vector2f(0,player->getVelocity()));}
+				player->player->move(sf::Vector2f(0,player->velocity));}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 			if(player->player->getPosition().x>32)
-				player->player->move(sf::Vector2f(-player->getVelocity(),0));}
+				player->player->move(sf::Vector2f(-player->velocity,0));}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
 			if(player->player->getPosition().x<width-96)
-				player->player->move(sf::Vector2f(player->getVelocity(),0));}
+				player->player->move(sf::Vector2f(player->velocity,0));}
 
 		//Supprimer impérativement
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)){
@@ -312,7 +312,7 @@ bool GameStep::step1(){
 			//Contact avec le joueur
 			if(lenemies>0 && player->player->getPosition().y>enemies.at(j)->getPosition().y-64 && player->player->getPosition().y<enemies.at(j)->getPosition().y+64){
 				if(player->player->getPosition().x>enemies.at(j)->getPosition().x-64 && player->player->getPosition().x<enemies.at(j)->getPosition().x+64){
-					this->score-=100;
+					this->score-=100/(1+(player->resistance/10));
 					//Delete the enemie
 					enemies.erase(enemies.begin()+j);
 					layer3.erase(j);

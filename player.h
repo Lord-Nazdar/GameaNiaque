@@ -20,12 +20,16 @@ public:
     void turnRight(); // Sens horaire
     void turnLeft(); // Sens anti-horaire
 	float getVelocity();
+	void setStyle(int pStyle);
+	int getStyle();
+	float velocity;
+	float reproduction;
+	float resistance;
 
 	AnimatedElement *player;
 
 private:
 	Style style;	//Style of the virus (3 values):icosahedral;helical;complex
-	float velocity;
 
 };
 
