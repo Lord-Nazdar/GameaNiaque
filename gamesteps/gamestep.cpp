@@ -251,6 +251,8 @@ int GameStep::menu(){
 			fillcolor.setPosition(mouse.getPosition().x,mouse.getPosition().y);
 			name.setString("Instruction");
 			name.setPosition(mouse.getPosition().x+40,mouse.getPosition().y);
+			if(mouse.isButtonPressed(sf::Mouse::Left))
+				return 8;
 		}
 		else if(mouse.getPosition().x>margel+750 && mouse.getPosition().x<margel+750+170 && mouse.getPosition().y>margeu+350 && mouse.getPosition().y<margeu+350+132 ){
 			if(playClic!=6){
@@ -409,54 +411,5 @@ void GameStep::stepEvent(){
 			if (event.mouseButton.button == sf::Mouse::Left)
 				mouseButtonDown=false;
 		}
-	}
-}
-
-void GameStep::instruction(){
-	int activ=0;	//choice number
-
-
-	sf::Sprite resume_button;
-	resume_button.setTexture(Texture("resume.png"));
-	resume_button.setTextureRect(sf::IntRect(500,0,500,200));
-
-	sf::Sprite quit_button;
-	quit_button.setTexture(Texture("quit.png"));
-	quit_button.setPosition(sf::Vector2f(0,250));
-	quit_button.setTextureRect(sf::IntRect(0,0,500,200));
-
-	while (window->isOpen())
-	{
-		sf::Event event;
-		while (window->pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window->close();
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
-				activ++;
-			if (event.type == sf::Event::KeyPressed&& event.key.code == sf::Keyboard::Return){
-				if(activ%2==0){
-					return;
-				}
-				else{
-					window->close();
-				}
-			}
-		}
-
-		if(activ%2==0){
-			resume_button.setTextureRect(sf::IntRect(500,0,500,200));
-			quit_button.setTextureRect(sf::IntRect(0,0,500,200));
-
-		}
-		else{
-			resume_button.setTextureRect(sf::IntRect(0,0,500,200));
-			quit_button.setTextureRect(sf::IntRect(500,0,500,200));
-		}
-
-		window->clear();
-		window->draw(resume_button);
-		window->draw(quit_button);
-		window->display();
 	}
 }

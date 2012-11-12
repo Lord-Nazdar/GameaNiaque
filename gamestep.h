@@ -24,7 +24,7 @@ public:
 	void init();
 	int menu();
 	bool pauseMenu();
-	void instruction();
+	bool instruction();
 	bool generateur();
 	bool logo();
 	bool prestep1();

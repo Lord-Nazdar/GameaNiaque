@@ -18,4 +18,5 @@ INPUT(
 ./debug\score.o
 ./debug\fonts.o
 ./debug\credit.o
+./debug\instruction.o
 );
