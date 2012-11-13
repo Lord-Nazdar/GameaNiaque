@@ -34,9 +34,9 @@ public:
 	bool step3();
 	bool step4();
 	void stepEvent();
-	int step3Mouse(std::vector<Element*> element);
 	bool stepScore();
 	bool credit();
+	static Player* player;
 
 private:
 	sf::RenderWindow *window;
@@ -45,7 +45,6 @@ private:
 	int width;
 	bool mouseButtonDown;
 	int score;
-	Player *player;
 	int red;
 };
 

@@ -1,5 +1,6 @@
 #include "../gamestep.h"
 
+Player* GameStep::player = NULL;
 
 float moveTo (int frame, float posFrom, float posTo, float duration){
 	return (posTo-posFrom)/(duration*1.0);

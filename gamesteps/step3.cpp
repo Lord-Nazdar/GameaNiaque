@@ -11,9 +11,9 @@ class Cell : public Element
             value = startValue;
             setOrigin(250, 250);
 
-            radius = (type==BIG ? 200 : (type==MED ? 150 : 100));
+            radius = (type==BIG ? 100 : (type==MED ? 75 : 50));
 
-            float scale = radius/sprite.getLocalBounds().width;
+            float scale = 2.f*radius/sprite.getLocalBounds().width;
             setScale(scale, scale);
 
 
@@ -21,16 +21,16 @@ class Cell : public Element
 
             valueText.setFont(Font("pixelart.ttf"));
             valueText.setString("00");
-            valueText.setOrigin(valueText.getLocalBounds().width/2.f, valueText.getLocalBounds().height/2.f);
+            valueText.setOrigin(valueText.getGlobalBounds().width/2.f, valueText.getGlobalBounds().height/2.f);
             valueText.setPosition(position);
             valueText.setColor(sf::Color::White);
-            update(0);
 
+			setColor(sf::Color(200,200,200));
         }
 
         void update(int frame)
         {
-        	if(frame%30 == 0)
+			if(frame%30 == 0)
         	{
 				if(value > 0)
 				{
@@ -63,7 +63,10 @@ class Cell : public Element
             	valueText.setColor(sf::Color(127, 0, 0));
             }
 
-            valueText.setString(toString(abs(value)));
+			std::string v = toString(abs(value));
+			if(v.length() < 2) v = '0' + v;
+            valueText.setString(v);
+
             window.draw(valueText);
 
 
@@ -73,7 +76,7 @@ class Cell : public Element
         {
             sf::Vector2f delta = sf::Vector2f(coord.x, coord.y) - getPosition();
             float distance = sqrt(delta.x*delta.x + delta.y*delta.y);
-            return (distance < radius/2);
+            return (distance < radius);
         }
 
         float getRadius() {	return radius; }
@@ -82,16 +85,35 @@ class Cell : public Element
 
         int sendValue(int v)
         {
-			if(abs(value) < abs(v))
+        	if(value < -v)
+        	{
+				value += v;
+				return -v;
+        	}
+			else
+			if(value < 0)
 			{
-				int t = value;
-				value = 0;
-				return t;
+				v = value+1;
+				value = -1;
+				return v;
 			}
 			else
+			if(value > v)
 			{
 				value -= v;
 				return v;
+			}
+			else
+			if(value > 0)
+			{
+				v = value-1;
+				value = 1;
+				return v;
+			}
+			else
+			if(value == 0)
+			{
+				return 0;
 			}
         }
 
@@ -103,19 +125,23 @@ class Cell : public Element
         }
 
     private:
-        int value;
+        int value; // Amount of agents in the cell. Positive number means allies agents (virus), Negative number means enemy agents (leucocytes)
         int genRate;
         float radius;
         sf::Text valueText;
 
 };
 
-class Agent : public Element
+
+class Agent : public AnimatedElement
 {
 	public:
 
-		Agent(int value, Cell& c1, Cell& c2, float speed = 1.f) : Element( (value > 0 ? Texture("cellule.png") : Texture()) ), c2(c2)
+	Agent(int v, Cell& c1, Cell& c2, float speed = 1.f) : AnimatedElement(Texture("grid.png"), sf::Vector2f(), 0.f, 64, 1, GameStep::player->getStyle()*8 ), c2(c2)
 		{
+			setOrigin(32, 32);
+			setScale(.5f, .5f);
+
 			delta = c2.getPosition() - c1.getPosition();
 			float length = sqrt( delta.x * delta.x + delta.y * delta.y );
 			delta /= length;
@@ -124,18 +150,29 @@ class Agent : public Element
 			sf::Vector2f endPos = c2.getPosition() - delta*c2.getRadius();
 			setPosition(startPos);
 
+			sf::Vector2f travel = endPos - startPos;
+			length = sqrt( travel.x*travel.x + travel.y*travel.y );
+
 			delta *= speed;
 
 			duration = length/speed;
 			elapsed = 0;
 
-			value = c1.sendValue(value);
-			alive = true;
+			value = c1.sendValue(v);
+			if(value != 0) alive = true; else setColor(sf::Color::Transparent);
+
+			if(value < 0) sprite.setTextureRect(sf::IntRect(0, 196, 64, 64));
 
 		}
 
 		void update(int frame)
 		{
+			if(value > 0 && frame%20 == 0)
+			{
+				setFrame(frameIndex);
+				frameIndex++;
+			}
+
 			if(alive)
 				if(elapsed < duration)
 				{
@@ -162,74 +199,278 @@ class Agent : public Element
 
 };
 
+class Gamestep3
+{
+	public:
+		Gamestep3(sf::RenderWindow& window) :
+			window(window),
+			layerAgent(2,0),
+			layerCell(1,0),
+			layerBackground(0,1),
+			frame(0),
+			selectedCell(NULL),
+			reticule(Texture("reticule.png")),
+			win(false),
+			lose(false)
+		{}
 
-bool GameStep::step3(){
+		void init();
+		void update();
+		void onclick(Cell* c, bool lbutton);
+		void select(Cell* c);
+		void unselect();
 
-	window->setMouseCursorVisible(true);
+		bool win;
+		bool lose;
 
-	int red=120;
-	bool incColor=false;
+	private:
 
-	LayerManager layerManager;
+		sf::RenderWindow& window;
 
-	Layer layerA(2,0);	//Agent layer
-	Layer layerC(1,0);	//Cell layer
-	Layer layerB(0,1);	//Background
+		LayerManager layerManager;
+		Layer layerAgent;
+		Layer layerCell;
+		Layer layerBackground;
 
-	layerManager.add(&layerB);
-	layerManager.add(&layerC);
-	layerManager.add(&layerA);
+		std::vector<Cell*> cells;
+		std::vector<Agent*> agents;
 
-	std::vector<Cell*> cells;
-	std::vector<Agent*> agents;
+		bool clicked;
+		Cell* selectedCell;
+		Element reticule;
 
-	Cell* c1 = new Cell(sf::Vector2f(100.f, 100.f), Cell::MED, 0);
-	Cell* c2 = new Cell(sf::Vector2f(300.f, 100.f), Cell::SMALL, 30);
-	Cell* c3 = new Cell(sf::Vector2f(100.f, 300.f), Cell::BIG, -30);
+		int frame;
+};
 
-	cells.push_back(c1);
-	cells.push_back(c2);
-	cells.push_back(c3);
+bool GameStep::step3()
+{
+	srand(time(NULL));
 
-	layerC.addElement(c1);
-	layerC.addElement(c2);
-	layerC.addElement(c3);
+	Gamestep3 gm3(*window);
+	gm3.init();
 
-
-	while (window->isOpen())
+	while (window->isOpen() && !gm3.win && !gm3.lose)
 	{
 		stepEvent();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+			if(!pauseMenu()){
+				return false;
+			}
+		}
+		gm3.update();
+	}
+}
 
-		if(mouseButtonDown){
+void Gamestep3::select(Cell* c)
+{
+	c->setColor(sf::Color(255,255,255));
+	selectedCell = c;
+}
 
-			for(std::vector<Cell*>::iterator i = cells.begin(); i != cells.end(); i++)
+void Gamestep3::unselect()
+{
+	if(selectedCell)
+		selectedCell->setColor(sf::Color(200, 200, 200));
+	selectedCell = NULL;
+}
+
+bool AICompFunctor(Cell* c1, Cell* c2)
+{
+	return c1->getValue() < c2->getValue();
+}
+
+void Gamestep3::init()
+{
+	window.setMouseCursorVisible(true);
+
+	layerManager.add(&layerBackground);
+	layerManager.add(&layerCell);
+	layerManager.add(&layerAgent);
+
+	// Generation de la map de cellules
+	const sf::Vector2u viewport = window.getSize();
+	const sf::Vector2u margins(100, 100);
+
+	const int maxRadius = 50;
+	const int minSpacing = 5;
+
+	const int idealCols = 10;
+	const int idealRows = 5;
+
+	int W = viewport.x - 2 * ( margins.x + maxRadius );
+	int H = viewport.y - 2 * ( margins.y + maxRadius );
+
+	int U = H / (( maxRadius + minSpacing ) * 4);
+	int V = W / (( maxRadius + minSpacing ) * 2);
+
+	if(U > idealRows) U = idealRows;
+	if(V > idealCols) V = idealCols;
+
+	float dx = W / (V - 1);
+	float dy = H / (U * 1.5f);
+
+	for(int u = 0; u < U; u++)
+	{
+		for(int v = 0; v < V; v++)
+		{
+
+			float x = v 			* dx + margins.x + maxRadius;
+			float y = (u*2 + v%2) 	* dy + margins.y + maxRadius;
+
+
+			Cell::Size s;
+			switch(rand() % 3)
 			{
-				if( (*i)->isInside(sf::Mouse::getPosition()) )
-				{
-					(*i)->setColor(sf::Color::Blue);
-				}
+				case 0: s = Cell::SMALL; break;
+				case 1: s = Cell::MED; break;
+				case 2: s = Cell::BIG; break;
 			}
 
-			mouseButtonDown=false;
+
+			Cell* c;
+
+			if(u == 0 && v == 0) // Le joueur commence dans le coin haut gauche
+				c = new Cell(sf::Vector2f(x, y), Cell::BIG, 1);
+			else if(u == U-1 && v == V-1) // Et l'ennemi dans le coin bas droite
+				c = new Cell(sf::Vector2f(x, y), Cell::BIG, -1);
+			else
+				c = new Cell(sf::Vector2f(x, y), s);
+
+
+			cells.push_back(c);
+			layerCell.addElement(c);
+
+		}
+	}
+
+
+	reticule.setOrigin(64, 64);
+	layerCell.addElement(&reticule);
+
+}
+
+void Gamestep3::update()
+{
+
+
+
+	// Gestion du click
+	bool lbutton = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+	bool rbutton = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+
+	if( (lbutton || rbutton) && !clicked)
+	{
+		clicked = true;
+		bool clicDansLeVide = true;
+
+		for(std::vector<Cell*>::iterator i = cells.begin(); i != cells.end(); i++)
+		{
+			if( (*i)->isInside(sf::Mouse::getPosition()) )
+			{
+				onclick(*i, lbutton);
+				clicDansLeVide = false;
+				break;
+			}
 		}
 
-		if(frame%4==0){
-			if(!incColor){
-				red--;
-				if(red<90)incColor=true;
-			}
-			else{
-				red++;
-				if(red>120)incColor=false;
-			}
+		if(lbutton && clicDansLeVide) unselect();
+	}
+
+	if(!lbutton && !rbutton) clicked = false;
+
+
+
+
+
+
+	// Dessin du réticule pour la cellule selectionnée
+	if(selectedCell != NULL)
+	{
+		reticule.setColor(sf::Color::Green);
+		reticule.setPosition(selectedCell->getPosition());
+		reticule.rotate(2);
+		float scale = (100+abs(((frame/4)%40)-20)) / 100.f;
+		reticule.setScale( scale * selectedCell->getScale() * 5.f );
+	}
+	else
+	{
+		reticule.setColor(sf::Color::Transparent);
+	}
+
+
+	// Suppression des agents inactifs
+	for(std::vector<Agent*>::iterator i = agents.begin(); i != agents.end();)
+	{
+		if( !(*i)->isAlive() )
+		{
+			delete (*i);
+			layerAgent.removeElement(*i);
+			i = agents.erase(i);
 		}
+		else i++;
+	}
 
 
-		window->clear(sf::Color(red,22,22));
-		layerManager.update(frame);
-		layerManager.draw(*window);
-		window->display();
 
-		frame++;
+	// Conditions de victoire et pre-check pour l'AI
+	int nbPositive = 0;
+	int nbNegative = 0;
+	int nbNeutre = 0;
+	for(std::vector<Cell*>::iterator i = cells.begin(); i != cells.end(); i++)
+	{
+		if( (*i)->getValue() > 0 ) nbPositive++;
+		if( (*i)->getValue() < 0 ) nbNegative++;
+		if( (*i)->getValue() == 0 ) nbNeutre++;
+	}
+	if(nbPositive == 0) lose = true;
+	if(nbNegative == 0) win = true;
+	//Cell* bestTarget = *std::min_element(cells.begin(), cells.end(), AICompFunctor);
+
+
+	// Boucle AI
+	for(std::vector<Cell*>::iterator i = cells.begin(); i != cells.end(); i++)
+	{
+		if( (*i)->getValue() < 0 )
+		{
+			// AI (random)
+			if(frame % ((1 + rand()%1)) == 0)
+			{
+				int target = rand() % cells.size();
+
+				Agent* a = new Agent(10, *(*i), *(cells[target]));
+				agents.push_back(a);
+				layerAgent.addElement(a);
+			}
+
+		}
+	}
+
+	// Fond rouge
+	int red = 90+abs(((frame/4)%60)-30);
+	window.clear(sf::Color(red, 22, 22));
+
+
+	layerManager.update(frame);
+	layerManager.draw(window);
+	window.display();
+
+	frame++;
+}
+
+void Gamestep3::onclick(Cell* c, bool lbutton)
+{
+	if(lbutton)
+	{
+		if(c->getValue() > 0)
+		{
+			unselect();
+			select(c);
+		}
+	}
+	else
+	{
+		Agent* a = new Agent(10, *selectedCell, *c);
+		agents.push_back(a);
+		layerAgent.addElement(a);
 	}
 }

@@ -80,9 +80,15 @@ int check=1;
 	scoreText.setPosition(20,20);
 
 	bool release=true;
+	bool trollpart2=true;
 
-	while (window->isOpen())
+	while (window->isOpen() && trollpart2)
 	{
+		//Supprimer impérativement
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)){
+			trollpart2=false;
+		}
+
 		stepEvent();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){

@@ -45,8 +45,8 @@ void Layer::clear(){
 	elementVector.clear();
 }
 
-void Layer::removeElement(Element *element){
-	//elementVector.erase(element);
+void Layer::removeElement(Element* element){
+	elementVector.erase(std::remove(elementVector.begin(), elementVector.end(), element));
 }
 
 void Layer::update(int frame){
