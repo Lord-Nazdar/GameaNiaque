@@ -19,4 +19,5 @@ INPUT(
 ./release\fonts.o
 ./release\credit.o
 ./release\instruction.o
+./release\talent.o
 );

@@ -19,4 +19,5 @@ INPUT(
 ./debug\fonts.o
 ./debug\credit.o
 ./debug\instruction.o
+./debug\talent.o
 );

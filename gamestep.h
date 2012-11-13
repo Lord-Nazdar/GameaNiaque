@@ -37,6 +37,7 @@ public:
 	bool stepScore();
 	bool credit();
 	static Player* player;
+	bool talent();
 
 private:
 	sf::RenderWindow *window;
@@ -46,6 +47,7 @@ private:
 	bool mouseButtonDown;
 	int score;
 	int red;
+	int tier;
 };
 
 float moveTo (int frame, float posFrom, float posTo, float duration);

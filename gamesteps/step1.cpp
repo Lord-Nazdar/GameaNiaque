@@ -126,6 +126,9 @@ bool GameStep::prestep1(){
 		frame++;
 	}
 
+	//remise à 0 du tier
+	this->tier=1;
+
 	return true;
 }
 
@@ -166,6 +169,13 @@ bool GameStep::step1(){
 	scoreText.setFont(Arial);
 	scoreText.setPosition(20,20);
 
+	sf::Text tabText;
+	tabText.setFont(Arial);
+	tabText.setCharacterSize(50);
+	tabText.setPosition(width-150+20,20);
+	tabText.setString("Tab");
+	tabText.setColor(sf::Color(0,0,0,0));
+
 	//Création de l'entitée player et positionnement
 	//player=new Player(Player::helical);
 	player->player->setPosition(sf::Vector2f((width/2)-32,(height/4)*3));
@@ -199,6 +209,14 @@ bool GameStep::step1(){
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
 			if(!pauseMenu()){
 				return false;
+			}
+		}
+
+		if(this->score>=1000*tier){
+			tabText.setColor(sf::Color(0,0,0,0+(frame%255)));
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)){
+				tier++;
+				talent();
 			}
 		}
 
@@ -383,6 +401,7 @@ bool GameStep::step1(){
 		layerManager.update(frame);
 		layerManager.draw(*window);
 		window->draw(scoreText);
+		window->draw(tabText);
 		window->display();
 
 		frame++;
