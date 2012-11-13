@@ -25,7 +25,6 @@ int main()
 
 	//Gamestep menu
 	do{
-		gamestep.step3();
 		returnMenu=gamestep.menu();
 		switch(returnMenu){
 			case 1:
