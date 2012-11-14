@@ -25,11 +25,9 @@ int main()
 
 	//Gamestep menu
 	do{
-		gamestep.step3();
 		returnMenu=gamestep.menu();
 		switch(returnMenu){
 			case 1:
-				gamestep.generateur();
 				if(case1(&gamestep)){
 					if(case2(&gamestep)){
 						if(gamestep.step3()){
@@ -65,6 +63,7 @@ bool case1(GameStep *gamestep){
 	menuMusic.play();
 	menuMusic.setLoop(true);
 
+	gamestep->generateur();
 	if(gamestep->prestep1()){
 		if(gamestep->step1()){
 			if(gamestep->step1int2()){

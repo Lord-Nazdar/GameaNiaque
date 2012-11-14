@@ -28,6 +28,10 @@ void GameStep::init(){
 
 	//Initialise le rouge pour plus de cohérence
 	red=120;
+
+	//Un run pour l'initialisation au noir
+	window->clear(sf::Color(0,0,0));
+	window->display();
 }
 
 bool GameStep::logo(){
@@ -43,7 +47,11 @@ bool GameStep::logo(){
 	Layer layer1(1,0);	//Logo apparences layer
 	Layer layer2(1,0);	//Logo gameaniaque layer
 	Layer layer3(1,0);	//Logo efrei layer
+	Layer layer4(1,0);	//Logo game layer
+	Layer layer5(1,0);	//Logo audio layer
 
+	sf::RectangleShape fade5(sf::Vector2f(width, height));
+	sf::RectangleShape fade4(sf::Vector2f(width, height));
 	sf::RectangleShape fade3(sf::Vector2f(width, height));
 	sf::RectangleShape fade2(sf::Vector2f(width, height));
 	sf::RectangleShape fade1(sf::Vector2f(width, height));
@@ -51,6 +59,8 @@ bool GameStep::logo(){
 	layer1.addElement(new Element(Texture("applogo.png"),sf::Vector2f((width/2)-346,(height/2)-111), 0.f));
 	layer2.addElement(new Element(Texture("gamelogo.png"),sf::Vector2f((width/2)-346,(height/2)-59.5), 0.f));
 	layer3.addElement(new Element(Texture("efreilogo.png"),sf::Vector2f((width/2)-346,(height/2)-166), 0.f));
+	layer4.addElement(new Element(Texture("jeulogo.png"),sf::Vector2f((width/2)-346,(height/2)-166), 0.f));
+	layer5.addElement(new Element(Texture("audiologo.png"),sf::Vector2f((width/2)-346,(height/2)-250), 0.f));
 
 	int frame=0;
 	fade1.setPosition(sf::Vector2f(0,0));
@@ -59,12 +69,16 @@ bool GameStep::logo(){
 	fade2.setFillColor(sf::Color(0,0,0,255));
 	fade3.setPosition(sf::Vector2f(0,0));
 	fade3.setFillColor(sf::Color(0,0,0,255));
-	while(frame<770 && window->isOpen())
+	fade4.setPosition(sf::Vector2f(0,0));
+	fade4.setFillColor(sf::Color(0,0,0,255));
+	fade5.setPosition(sf::Vector2f(0,0));
+	fade5.setFillColor(sf::Color(0,0,0,255));
+	while(frame<1175 && window->isOpen())
 	{
 		stepEvent();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-			frame=765;
+			frame=1300;
 
 		if(frame<255){
 			fade1.setFillColor(sf::Color(0,0,0,255-frame));
@@ -75,10 +89,22 @@ bool GameStep::logo(){
 		else if(frame>520&&frame<770){
 			fade3.setFillColor(sf::Color(0,0,0,255-(frame-520)));
 		}
+		else if(frame>770&&frame<1020){
+			fade4.setFillColor(sf::Color(0,0,0,255-(frame-770)));
+		}
+		else if(frame>1030&&frame<1175){
+			fade5.setFillColor(sf::Color(0,0,0,255-(frame-1030)));
+		}
 
 
 		window->clear(sf::Color(0,0,0));
 
+		if(frame>1020&&frame<1175)
+			layer5.draw(*window,sf::RenderStates::Default);
+		window->draw(fade5);
+		if(frame>765&&frame<1020)
+			layer4.draw(*window,sf::RenderStates::Default);
+		window->draw(fade4);
 		if(frame>510&&frame<765)
 			layer3.draw(*window,sf::RenderStates::Default);
 		window->draw(fade3);

@@ -4,7 +4,6 @@ INPUT(
 ./release\layer.o
 ./release\player.o
 ./release\element.o
-./release\movableelement.o
 ./release\textures.o
 ./release\animatedelement.o
 ./release\upgrademanager.o

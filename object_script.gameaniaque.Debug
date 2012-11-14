@@ -4,7 +4,6 @@ INPUT(
 ./debug\layer.o
 ./debug\player.o
 ./debug\element.o
-./debug\movableelement.o
 ./debug\textures.o
 ./debug\animatedelement.o
 ./debug\upgrademanager.o
