@@ -1,6 +1,5 @@
 #include "../gamestep.h"
 
-
 class Cell : public Element
 {
     public:
@@ -20,26 +19,23 @@ class Cell : public Element
             genRate = (type==BIG ? 3 : (type==MED ? 2 : 1));
 
             valueText.setFont(Font("pixelart.ttf"));
+            valueText.setCharacterSize(24);
             valueText.setString("00");
             valueText.setOrigin(valueText.getGlobalBounds().width/2.f, valueText.getGlobalBounds().height/2.f);
             valueText.setPosition(position);
             valueText.setColor(sf::Color::White);
 
 			setColor(sf::Color(200,200,200));
+
+			lastAttack = 0;
         }
 
         void update(int frame)
         {
-			if(frame%30 == 0)
+			if(frame % (60/genRate) == 0)
         	{
-				if(value > 0)
-				{
-					value += genRate;
-				}
-				if(value < 0)
-				{
-					value -= genRate;
-				}
+				if(value > 0) value ++;
+				if(value < 0) value --;
 
 				if(value < -99) value = -99;
 				if(value > 99) value = 99;
@@ -124,11 +120,30 @@ class Cell : public Element
             if(value > 99) value = 99;
         }
 
+        float getAICost(Cell* c)
+        {
+			float cost = -1.f;
+
+			sf::Vector2f delta = c->getPosition() - getPosition();
+			float distance = sqrt( delta.x*delta.x + delta.y*delta.y );
+			float value = c->getValue();
+			int size = c->getRadius();
+
+			if(value >= 0)
+				cost = size * (100-value) * (1/distance);
+
+			return cost;
+        }
+
+        int getLastAttack() {return lastAttack;}
+        void setLastAttack(int a) {lastAttack = a;}
+
     private:
         int value; // Amount of agents in the cell. Positive number means allies agents (virus), Negative number means enemy agents (leucocytes)
         int genRate;
         float radius;
         sf::Text valueText;
+        int lastAttack;
 
 };
 
@@ -153,14 +168,15 @@ class Agent : public AnimatedElement
 			sf::Vector2f travel = endPos - startPos;
 			length = sqrt( travel.x*travel.x + travel.y*travel.y );
 
+			value = c1.sendValue(v);
+
+			//speed *= (value < 0 ? 1.f : .5f);
 			delta *= speed;
 
 			duration = length/speed;
 			elapsed = 0;
 
-			value = c1.sendValue(v);
 			if(value != 0) alive = true; else setColor(sf::Color::Transparent);
-
 			if(value < 0) sprite.setTextureRect(sf::IntRect(0, 196, 64, 64));
 
 		}
@@ -198,6 +214,33 @@ class Agent : public AnimatedElement
 		int elapsed;
 
 };
+
+namespace AI
+{
+	class SortFunctor
+	{
+		public:
+			SortFunctor(Cell* c) : c0(c) { }
+
+			bool operator()(Cell* c1, Cell* c2)
+			{ return (c0->getAICost(c1) > -1.f) && c0->getAICost(c1) > c0->getAICost(c2); }
+
+		private:
+			Cell* c0;
+	};
+
+	class RemoveFunctor
+	{
+		public:
+			RemoveFunctor(Cell* c) : c0(c) { }
+
+			bool operator()(Cell* c)
+			{ return c0->getAICost(c) < 0.f; }
+
+		private:
+			Cell* c0;
+	};
+}
 
 class Gamestep3
 {
@@ -274,11 +317,6 @@ void Gamestep3::unselect()
 	selectedCell = NULL;
 }
 
-bool AICompFunctor(Cell* c1, Cell* c2)
-{
-	return c1->getValue() < c2->getValue();
-}
-
 void Gamestep3::init()
 {
 	window.setMouseCursorVisible(true);
@@ -353,7 +391,6 @@ void Gamestep3::update()
 {
 
 
-
 	// Gestion du click
 	bool lbutton = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 	bool rbutton = sf::Mouse::isButtonPressed(sf::Mouse::Right);
@@ -424,7 +461,6 @@ void Gamestep3::update()
 	}
 	if(nbPositive == 0) lose = true;
 	if(nbNegative == 0) win = true;
-	//Cell* bestTarget = *std::min_element(cells.begin(), cells.end(), AICompFunctor);
 
 
 	// Boucle AI
@@ -432,14 +468,26 @@ void Gamestep3::update()
 	{
 		if( (*i)->getValue() < 0 )
 		{
-			// AI (random)
-			if(frame % ((1 + rand()%1)) == 0)
-			{
-				int target = rand() % cells.size();
+			int intervalBetweenAttacks = ((120 /*+ rand()%60*/) /*- (*i)->getValue()*3*/ + nbNegative*50);
 
-				Agent* a = new Agent(10, *(*i), *(cells[target]));
-				agents.push_back(a);
-				layerAgent.addElement(a);
+			if((*i)->getLastAttack() == 0) (*i)->setLastAttack(frame);
+			if(frame - (*i)->getLastAttack() > intervalBetweenAttacks)
+			{
+				(*i)->setLastAttack(frame);
+
+				// Opérations très lourdes mais osef total vu les perfs du jeu
+				std::vector<Cell*> targets = cells;
+				std::sort(targets.begin(), targets.end(), AI::SortFunctor((*i)));
+				std::remove_if(targets.begin(), targets.end(), AI::RemoveFunctor((*i)));
+
+				if(targets.size() > 0)
+				{
+					int target = rand() % min(3, (int)targets.size());
+
+					Agent* a = new Agent(10, *(*i), *(targets[target]));
+					agents.push_back(a);
+					layerAgent.addElement(a);
+				}
 			}
 
 		}
@@ -467,7 +515,7 @@ void Gamestep3::onclick(Cell* c, bool lbutton)
 			select(c);
 		}
 	}
-	else
+	else if(selectedCell != NULL)
 	{
 		Agent* a = new Agent(10, *selectedCell, *c);
 		agents.push_back(a);
