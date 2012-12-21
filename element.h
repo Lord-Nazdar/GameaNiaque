@@ -17,7 +17,7 @@ public:
 
 	void setColor(sf::Color color);
 
-protected:
+//protected:
 	sf::Sprite sprite;
 };
 

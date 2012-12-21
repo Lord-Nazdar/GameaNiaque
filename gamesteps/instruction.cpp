@@ -69,7 +69,7 @@ bool GameStep::instruction(){
 	etape3explR.setCharacterSize(15);
 	etape3explR.setColor(sf::Color(100,100,100));
 	etape3explR.setPosition(sf::Vector2f((width/2)-265,(height/2)-215));
-	etape3explR.setString("Lorem Ipsum");
+	etape3explR.setString(" Votre but, capturer les\ncellules adverses.\n\n Vous partez en haut à\ngauche, les anticorps en\nbas à droite.\n\n Clic gauche : vous\nselectionnez votre cellule\n Clic droit : vous\nl'envoyez au contact\n\n Le calcul est simple si\nle paquet envoyé est plus\nimportant que ce qui se\ntrouve sur la cellule\nvous l'avez caputré !");
 
 	//--Etape 4
 	sf::RectangleShape step3(sf::Vector2f(260, 295));

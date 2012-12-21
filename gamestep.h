@@ -31,6 +31,7 @@ public:
 	bool step1();
 	bool step1int2();
 	bool step2();
+	bool step2int3();
 	bool step3();
 	bool step4();
 	void stepEvent();
@@ -48,6 +49,8 @@ private:
 	int score;
 	int red;
 	int tier;
+	std::vector<Element*> white1;
+	std::vector<Element*> white2;
 };
 
 float moveTo (int frame, float posFrom, float posTo, float duration);

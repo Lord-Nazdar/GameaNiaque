@@ -11,7 +11,7 @@ bool case2(GameStep *gamestep);
 
 int main()
 {
-	cout << "v0.7.1" << endl;
+	cout << "v2.7.1" << endl;
 
 
 	GameStep gamestep;
@@ -85,7 +85,9 @@ bool case2(GameStep *gamestep){
 	menuMusic.setLoop(true);
 
 	if(gamestep->step2()){
-		return true;
+		if(gamestep->step2int3()){
+			return true;
+		}
 	}
 
 	return false;

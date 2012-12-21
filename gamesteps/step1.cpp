@@ -11,6 +11,10 @@ bool GameStep::prestep1(){
 	LayerManager layerManager;
 	//Layer layer1(1,0);	//	Player cell layer
 	Layer layer2(1,0);	// logo
+	Layer layer6(1,1);	//white particles Layer
+	Layer layer7(1,1);	//white2 particles Layer
+	layerManager.add(&layer7);
+	layerManager.add(&layer6);
 
 	//layerManager.add(&layer1);
 	layerManager.add(&layer2);
@@ -111,6 +115,51 @@ bool GameStep::prestep1(){
 			acte.setColor(sf::Color(0,0,0,(frame-450)*2.5));
 		}
 
+		int white1size = white1.size();
+		int white2size = white2.size();
+
+		for(unsigned int j=0; j<white1size; j++){
+			if(white1size>0 && white1.at(j)->getPosition().y>height+128){
+				white1.erase(white1.begin()+j);
+				white1size--;
+			}
+		}
+
+		for(unsigned int j=0; j<white2size; j++){
+			if(white2size>0 && white2.at(j)->getPosition().y>height+128){
+				white2.erase(white2.begin()+j);
+				white2size--;
+			}
+		}
+
+
+		//spawn white1
+		if(frame%30==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			white1.push_back(new Element(Texture("white1.png"),sf::Vector2f(r,0), 0.f));
+			float srand = (rand()%5)/10.0;
+			white1[white1.size()-1]->setScale(0.75+(srand),0.75+(srand));
+			layer6.addElement(white1[white1.size()-1]);
+		}
+
+		//spawn white2
+		if(frame%50==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			white2.push_back(new Element(Texture("white2.png"),sf::Vector2f(r,0), 0.f));
+			float srand = (rand()%10)/10.0;
+			white2[white2.size()-1]->setScale(0.75+(srand),0.75+(srand));
+			layer7.addElement(white2[white2.size()-1]);
+		}
+		//Update white1
+		for(std::vector<Element*>::iterator i = white1.begin(); i != white1.end(); i++){
+			(*i)->move(0,2);
+		}
+
+		//Update white2
+		for(std::vector<Element*>::iterator i = white2.begin(); i != white2.end(); i++){
+			(*i)->move(0,1);
+		}
+
 
 		window->clear(sf::Color(red,22,22));
 		layerManager.update(frame);
@@ -153,6 +202,10 @@ bool GameStep::step1(){
 	Layer layer3(1,1);	//Enemies layer
 	Layer layer4(1,0);	//Explosion layer
 	Layer layer5(1,1);	//Bonus Layer
+	Layer layer6(1,1);	//white particles Layer
+	Layer layer7(1,1);	//white2 particles Layer
+	layerManager.add(&layer7);
+	layerManager.add(&layer6);
 	layerManager.add(&layer2);
 	layerManager.add(&layer3);
 	layerManager.add(&layer4);
@@ -195,6 +248,7 @@ bool GameStep::step1(){
 	std::vector<AnimatedElement*> enemies;
 	std::vector<AnimatedElement*> bonus;
 
+
 	//Vector for lifetime
 	std::vector<int> exploLifeTime;
 	sf::Clock clock1;
@@ -212,14 +266,6 @@ bool GameStep::step1(){
 			}
 		}
 
-		if(this->score>=1000*tier){
-			tabText.setColor(sf::Color(0,0,0,0+(frame%255)));
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)){
-				tier++;
-				talent();
-			}
-		}
-
 		if(frame%4==0){
 			if(!incColor){
 				red--;
@@ -231,16 +277,16 @@ bool GameStep::step1(){
 			}
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)||sf::Keyboard::isKeyPressed(sf::Keyboard::Z)){
 			if(player->player->getPosition().y>height/2)
 				player->player->move(sf::Vector2f(0,-player->velocity));}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)||sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
 			if(player->player->getPosition().y<height-96)
 				player->player->move(sf::Vector2f(0,player->velocity));}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)||sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
 			if(player->player->getPosition().x>32)
 				player->player->move(sf::Vector2f(-player->velocity,0));}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)||sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
 			if(player->player->getPosition().x<width-96)
 				player->player->move(sf::Vector2f(player->velocity,0));}
 
@@ -354,6 +400,42 @@ bool GameStep::step1(){
 			}
 		}
 
+		int white1size = white1.size();
+		int white2size = white2.size();
+
+		for(unsigned int j=0; j<white1size; j++){
+			if(white1size>0 && white1.at(j)->getPosition().y>height+128){
+				white1.erase(white1.begin()+j);
+				white1size--;
+			}
+		}
+
+		for(unsigned int j=0; j<white2size; j++){
+			if(white2size>0 && white2.at(j)->getPosition().y>height+128){
+				white2.erase(white2.begin()+j);
+				white2size--;
+			}
+		}
+
+
+		//spawn white1
+		if(frame%30==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			white1.push_back(new Element(Texture("white1.png"),sf::Vector2f(r,0), 0.f));
+			float srand = (rand()%5)/10.0;
+			white1[white1.size()-1]->setScale(0.75+(srand),0.75+(srand));
+			layer6.addElement(white1[white1.size()-1]);
+		}
+
+		//spawn white2
+		if(frame%50==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			white2.push_back(new Element(Texture("white2.png"),sf::Vector2f(r,0), 0.f));
+			float srand = (rand()%10)/10.0;
+			white2[white2.size()-1]->setScale(0.75+(srand),0.75+(srand));
+			layer7.addElement(white2[white2.size()-1]);
+		}
+
 		//spawn enemies
 		if(frame%60==0){
 			int r = 0 + (rand() % ((width-128) - 0));
@@ -365,6 +447,16 @@ bool GameStep::step1(){
 			int r = 0 + (rand() % ((width-128) - 0));
 			bonus.push_back(new AnimatedElement(Texture("tgs.png"),sf::Vector2f(r,0), 0.f, 64, 1,0));
 			layer5.addElement(bonus[bonus.size()-1]);
+		}
+
+		//Update white1
+		for(std::vector<Element*>::iterator i = white1.begin(); i != white1.end(); i++){
+			(*i)->move(0,2);
+		}
+
+		//Update white2
+		for(std::vector<Element*>::iterator i = white2.begin(); i != white2.end(); i++){
+			(*i)->move(0,1);
 		}
 
 		//Update enemies
@@ -451,6 +543,10 @@ bool GameStep::step1int2(){
 	LayerManager layerManager;
 	Layer layer1(1,0);	//Player cell layer
 	Layer layer2(1,0);	// Big Cell
+	Layer layer6(1,1);	//white particles Layer
+	Layer layer7(1,1);	//white2 particles Layer
+	layerManager.add(&layer7);
+	layerManager.add(&layer6);
 	layerManager.add(&layer1);
 	layerManager.add(&layer2);
 
@@ -518,6 +614,51 @@ bool GameStep::step1int2(){
 		}
 		if(frame>450){
 			return true;
+		}
+
+		int white1size = white1.size();
+		int white2size = white2.size();
+
+		for(unsigned int j=0; j<white1size; j++){
+			if(white1size>0 && white1.at(j)->getPosition().y>height+128){
+				white1.erase(white1.begin()+j);
+				white1size--;
+			}
+		}
+
+		for(unsigned int j=0; j<white2size; j++){
+			if(white2size>0 && white2.at(j)->getPosition().y>height+128){
+				white2.erase(white2.begin()+j);
+				white2size--;
+			}
+		}
+
+
+		//spawn white1
+		if(frame%30==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			white1.push_back(new Element(Texture("white1.png"),sf::Vector2f(r,0), 0.f));
+			float srand = (rand()%5)/10.0;
+			white1[white1.size()-1]->setScale(0.75+(srand),0.75+(srand));
+			layer6.addElement(white1[white1.size()-1]);
+		}
+
+		//spawn white2
+		if(frame%50==0){
+			int r = 0 + (rand() % ((width-128) - 0));
+			white2.push_back(new Element(Texture("white2.png"),sf::Vector2f(r,0), 0.f));
+			float srand = (rand()%10)/10.0;
+			white2[white2.size()-1]->setScale(0.75+(srand),0.75+(srand));
+			layer7.addElement(white2[white2.size()-1]);
+		}
+		//Update white1
+		for(std::vector<Element*>::iterator i = white1.begin(); i != white1.end(); i++){
+			(*i)->move(0,2);
+		}
+
+		//Update white2
+		for(std::vector<Element*>::iterator i = white2.begin(); i != white2.end(); i++){
+			(*i)->move(0,1);
 		}
 
 		window->clear(sf::Color(red,22,22));

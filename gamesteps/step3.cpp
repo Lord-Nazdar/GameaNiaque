@@ -274,6 +274,11 @@ class Gamestep3
 		Layer layerAgent;
 		Layer layerCell;
 		Layer layerBackground;
+		Layer white1l;
+		Layer white2l;
+
+		std::vector<Element*> white1;
+		std::vector<Element*> white2;
 
 		std::vector<Cell*> cells;
 		std::vector<Agent*> agents;
@@ -288,6 +293,13 @@ class Gamestep3
 bool GameStep::step3()
 {
 	srand(time(NULL));
+	int frame=0;
+
+	sf::Music menuMusic;
+	//logoMusic=new sf::Music("logo.wav");
+	menuMusic.openFromFile("music/part3.wav");
+	menuMusic.play();
+	menuMusic.setLoop(true);
 
 	Gamestep3 gm3(*window);
 	gm3.init();
@@ -300,8 +312,21 @@ bool GameStep::step3()
 				return false;
 			}
 		}
+		//Supprimer impérativement
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)){
+			gm3.win=true;
+		}
 		gm3.update();
+		frame++;
 	}
+	if(!gm3.lose){
+		score+=7500-frame;
+		if(score<0)
+			score=0;
+	}
+
+	return true;
+
 }
 
 void Gamestep3::select(Cell* c)
@@ -321,9 +346,13 @@ void Gamestep3::init()
 {
 	window.setMouseCursorVisible(true);
 
+	layerManager.add(&white1l);
+	layerManager.add(&white2l);
+
 	layerManager.add(&layerBackground);
 	layerManager.add(&layerCell);
 	layerManager.add(&layerAgent);
+
 
 	// Generation de la map de cellules
 	const sf::Vector2u viewport = window.getSize();
@@ -389,6 +418,53 @@ void Gamestep3::init()
 
 void Gamestep3::update()
 {
+	int width= window.getSize().x;
+	int height= window.getSize().y;
+
+	int white1size = white1.size();
+	int white2size = white2.size();
+
+	for(unsigned int j=0; j<white1size; j++){
+		if(white1size>0 && white1.at(j)->getPosition().y>height+128){
+			white1.erase(white1.begin()+j);
+			white1size--;
+		}
+	}
+
+	for(unsigned int j=0; j<white2size; j++){
+		if(white2size>0 && white2.at(j)->getPosition().y>height+128){
+			white2.erase(white2.begin()+j);
+			white2size--;
+		}
+	}
+
+
+	//spawn white1
+	if(frame%30==0){
+		int r = 0 + (rand() % ((width-128) - 0));
+		white1.push_back(new Element(Texture("white1.png"),sf::Vector2f(r,0), 0.f));
+		float srand = (rand()%5)/10.0;
+		white1[white1.size()-1]->setScale(0.75+(srand),0.75+(srand));
+		white1l.addElement(white1[white1.size()-1]);
+	}
+
+	//spawn white2
+	if(frame%50==0){
+		int r = 0 + (rand() % ((width-128) - 0));
+		white2.push_back(new Element(Texture("white2.png"),sf::Vector2f(r,0), 0.f));
+		float srand = (rand()%10)/10.0;
+		white2[white2.size()-1]->setScale(0.75+(srand),0.75+(srand));
+		white2l.addElement(white2[white2.size()-1]);
+	}
+	//Update white1
+	for(std::vector<Element*>::iterator i = white1.begin(); i != white1.end(); i++){
+		(*i)->move(0,2);
+	}
+
+	//Update white2
+	for(std::vector<Element*>::iterator i = white2.begin(); i != white2.end(); i++){
+		(*i)->move(0,1);
+	}
 
 
 	// Gestion du click

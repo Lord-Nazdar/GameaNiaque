@@ -32,6 +32,9 @@ void GameStep::init(){
 	//Un run pour l'initialisation au noir
 	window->clear(sf::Color(0,0,0));
 	window->display();
+
+	window->setTitle("The Ultimate Mayhem Destruction Virus");
+
 }
 
 bool GameStep::logo(){
